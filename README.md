@@ -1,2 +1,0 @@
-# TopDownShooter
-Assessment 3
