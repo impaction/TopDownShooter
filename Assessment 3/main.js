@@ -27,19 +27,23 @@ function getDeltaTime()
 	return deltaTime;
 }
 //-------------------- Don't modify anything above here
+//screen
+var SCREEN_WIDTH = canvas.width;
+var SCREEN_HEIGHT = canvas.height;
+
 //fps
 var fps = 0;
 var fpsCount = 0;
 var fpsTime = 0;
-/*
+
 // load the image to use for the level tiles
 var tileset = document.createElement("img"); 
 tileset.src = "All Tiles .png"
 
 //level layers 
-var LAYER_Floor = 0; 
-var LAYER_Walls = 1;
-var LAYER_Lava = 2;
+var LAYER_FLOOR = 0; 
+var LAYER_WALLS = 1;
+var LAYER_LAVA = 2;
 var LAYER_COUNT = 3;
 
 var MAP = { tw: 50, th: 50 }; 
@@ -47,7 +51,7 @@ var MAP = { tw: 50, th: 50 };
 var TILE = 64; 
 //The width/height of a tile (in pixels). Your tiles should be square. 
 //These dimensions refer to the map grid tiles. Our tileset tiles (the images) can be different dimensions.  
-var TILESET_TILE = TILE * 1.5; 
+var TILESET_TILE = TILE; 
 //The width/height of a tile in the tileset. Because the images are twice as big as the grid in our map 
 //we need to be careful (but it allows us a bit more flexibility when designing the level)  
 var TILESET_PADDING = 0; 
@@ -59,13 +63,14 @@ var TILESET_COUNT_X = 12;
 var TILESET_COUNT_Y = 6; 
 //How many rows of tile images are in the tileset
 
-var cells = [];
-*/
+
 //new
 var keyboard = new Keyboard();
-//var vector2 = new Vector2();
-//var player = new Player();
-/*
+var vector2 = new Vector2();
+var player = new Player();
+
+var cells = [];
+
 function initialize() 
 {          
 	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++)  // initialize the collision map
@@ -82,8 +87,8 @@ function initialize()
 // for each tile we find in the layer data, we need to create 4 collisions because 
 //our collision squares are 35x35 but the tile in the level are 70x70                    
 					cells[layerIdx][y][x] = 1;                       
-					cells[layerIdx][y-1][x] = 1;                         
-					cells[layerIdx][y-1][x+1] = 1;                       
+					//cells[layerIdx][y-1][x] = 1;                         
+					//cells[layerIdx][y-1][x+1] = 1;                       
 					cells[layerIdx][y][x+1] = 1;                    
 				} 
 
@@ -96,6 +101,7 @@ function initialize()
 		}        
 	}
 }
+
 
 function cellAtPixelCoord(layer, x,y)    
 {  
@@ -134,37 +140,57 @@ function bound(value, min, max)
 	return value; 
 }
 
-var worldOffsetX =0;
+var worldOffsetX = 1;
+var worldOffsetY = 1;
 function drawMap() 
 { 
 	var startX = -1;
-	var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
+	var startY = -1;
+	var maxTilesX = Math.floor(SCREEN_WIDTH / TILE) + 2;
+	var maxTilesY = Math.floor(SCREEN_HEIGHT / TILE) + 2;
 	var tileX = pixelToTile(player.position.x);
+	var tileY = pixelToTile(player.position.y);
 	var offsetX = TILE + Math.floor(player.position.x%TILE);
+	var offsetY = TILE + Math.floor(player.position.y%TILE);
 	
-	startX = tileX - Math.floor(maxTiles / 2);
+	startX = tileX - Math.floor(maxTilesX / 2);
+	startY = tileY - Math.floor(maxTilesY / 2);
 	
-	if(startX < -1) 
+	if(startX <= -2) 
 	{
 		startX = 0;
 		offsetX = 0;
 	}
 	
-	if(startX > MAP.tw - maxTiles)
+	if(startY <= -3) 
 	{
-		startX = MAP.tw - maxTiles + 1;
+		startY = -1;
+		offsetY = -1;
+	}
+	
+	if(startX > (MAP.tw - maxTilesX ))
+	{
+		startX = MAP.tw - maxTilesX + 1;
 		offsetX = TILE;
 	}
 	
+	if(startY > (MAP.th - maxTilesY - 2))
+	{
+		startY = MAP.th - maxTilesY - 1 ;
+		offsetY = TILE;
+	}
+	
 	worldOffsetX = startX * TILE + offsetX;
+	worldOffsetY = startY * TILE + offsetY; 
 	
 	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
 	{
 		for( var y = 0; y < level1.layers[layerIdx].height;  y++ ) 
 		{
+			
 			var idx = y * level1.layers[layerIdx].width + startX;
 			
-			for( var x = startX; x < startX + maxTiles;  x++ ) 
+			for( var x = startX; x < startX + maxTilesX;  x++ ) 
 			{
 				if( level1.layers[layerIdx].data[idx] != 0 )
 				{
@@ -173,10 +199,10 @@ function drawMap()
 					var tileIndex = level1.layers[layerIdx].data[idx] - 1;
 					var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * 
 						(TILESET_TILE + TILESET_SPACING);
-					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_Y)) *
+					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) *
 						(TILESET_TILE + TILESET_SPACING);
 					context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, 
-					(x-startX)*TILE - offsetX, (y -1)*TILE, TILESET_TILE, TILESET_TILE);
+					(x-startX)*TILE - offsetX, (y -1)*TILE - worldOffsetY, TILESET_TILE, TILESET_TILE);
 				}
 				idx++;
 			}
@@ -196,7 +222,7 @@ function intersects(x1, y1, w1, h1, x2, y2, w2, h2)
 	}  
 	return true; 
 }
-*/	
+	
 //run function
 function run()
 {
@@ -218,7 +244,7 @@ function run()
 	}
 }
 
-//initialize();
+initialize();
 
 //-------------------- Don't modify anything below here
 // This code will set up the framework so that the 'run' function is called 60 times per second.

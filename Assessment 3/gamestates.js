@@ -5,7 +5,7 @@ var STATE_GAMEOVER = 2;
 var gameOverTimer = 5;
 
 // default launch screen
-var gameState = STATE_TITLE; //STATE_TITLE or STATE_GAME or STATE_GAMEOVER
+var gameState = STATE_GAME; //STATE_TITLE or STATE_GAME or STATE_GAMEOVER
 
 //title screen text
 function titleText()
@@ -39,6 +39,14 @@ function runTitle(deltaTime)
 function runGame(deltaTime)
 {
 	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
+	
+	//update player 	
+	player.update(deltaTime);
+	
+	drawMap();
+	
+	//draw player
+	player.draw();
 	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
