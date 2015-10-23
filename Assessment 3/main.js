@@ -71,18 +71,18 @@ var player = new Player();
 
 var cells = [];
 
-function initialize() 
+function initialize(level) 
 {          
 	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++)  // initialize the collision map
 	{           
 		cells[layerIdx] = [];             
 		var idx = 0;             
-		for(var y = 0; y < level1.layers[layerIdx].height; y++)
+		for(var y = 0; y < level.layers[layerIdx].height; y++)
 		{                     
 			cells[layerIdx][y] = [];             
-			for(var x = 0; x < level1.layers[layerIdx].width; x++) 
+			for(var x = 0; x < level.layers[layerIdx].width; x++) 
 			{                 
-				if(level1.layers[layerIdx].data[idx] != 0) 
+				if(level.layers[layerIdx].data[idx] != 0) 
 				{ 
 // for each tile we find in the layer data, we need to create 4 collisions because 
 //our collision squares are 35x35 but the tile in the level are 70x70                    
@@ -142,7 +142,7 @@ function bound(value, min, max)
 
 var worldOffsetX = 1;
 var worldOffsetY = 1;
-function drawMap() 
+function drawMap(level) 
 { 
 	var startX = -1;
 	var startY = -1;
@@ -174,9 +174,9 @@ function drawMap()
 		offsetX = TILE;
 	}
 	
-	if(startY > (MAP.th - maxTilesY - 2))
+	if(startY > (MAP.th - maxTilesY - 1))
 	{
-		startY = MAP.th - maxTilesY - 1 ;
+		startY = MAP.th - maxTilesY;
 		offsetY = TILE;
 	}
 	
@@ -185,18 +185,18 @@ function drawMap()
 	
 	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
 	{
-		for( var y = 0; y < level1.layers[layerIdx].height;  y++ ) 
+		for( var y = 0; y < level.layers[layerIdx].height;  y++ ) 
 		{
 			
-			var idx = y * level1.layers[layerIdx].width + startX;
+			var idx = y * level.layers[layerIdx].width + startX;
 			
 			for( var x = startX; x < startX + maxTilesX;  x++ ) 
 			{
-				if( level1.layers[layerIdx].data[idx] != 0 )
+				if( level.layers[layerIdx].data[idx] != 0 )
 				{
 // the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
 //so subtract one from the tilesetid to get the correct tile
-					var tileIndex = level1.layers[layerIdx].data[idx] - 1;
+					var tileIndex = level.layers[layerIdx].data[idx] - 1;
 					var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * 
 						(TILESET_TILE + TILESET_SPACING);
 					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) *
@@ -238,13 +238,21 @@ function run()
 		runGame(deltaTime);
 		break;
 		
+		case STATE_LEVELCOMPLETE:
+		runLvComp(deltaTime);
+		break;
+		
+		case STATE_GAMECOMPLETE:
+		runGameComplete(deltaTime);
+		break
+		
 		case STATE_GAMEOVER:
 		runGameOver(deltaTime);
 		break;
 	}
 }
 
-initialize();
+initialize(level);
 
 //-------------------- Don't modify anything below here
 // This code will set up the framework so that the 'run' function is called 60 times per second.

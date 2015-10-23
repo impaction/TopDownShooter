@@ -1,11 +1,15 @@
 var STATE_TITLE = 0;
 var STATE_GAME = 1;
-var STATE_GAMEOVER = 2;
+var STATE_LEVELCOMPLETE = 2;
+var STATE_GAMECOMPLETE = 3;
+var STATE_GAMEOVER = 4;
 
 var gameOverTimer = 5;
 
+var level = level1;
+
 // default launch screen
-var gameState = STATE_GAME; //STATE_TITLE or STATE_GAME or STATE_GAMEOVER
+var gameState = STATE_TITLE; //STATE_TITLE or STATE_GAME or STATE_GAMEOVER
 
 //title screen text
 function titleText()
@@ -28,7 +32,8 @@ function runTitle(deltaTime)
 	
 //enter game
 	if(keyboard.isKeyDown(keyboard.KEY_ENTER) == true) 
-	{         
+	{    
+		player.position.set( 5*TILE,45*TILE); //set player pos for lv1
 		gameState = STATE_GAME;
 		return;     
 	}      
@@ -43,14 +48,21 @@ function runGame(deltaTime)
 	//update player 	
 	player.update(deltaTime);
 	
-	drawMap();
+	drawMap(level);
 	
 	//draw player
 	player.draw();
 	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
-	context.fillText("Playing Game SHIFT !",240, 100);
+	context.fillText("Playing Game SHIFT or 1 !",240, 100);
+	
+	if(keyboard.isKeyDown(keyboard.KEY_1) == true) 
+	{
+		player.position.set( 5*TILE,45*TILE); //set player pos for lv2
+		gameState = STATE_LEVELCOMPLETE;
+		return;     
+	}
 	
 	if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true) 
 	{         
@@ -66,6 +78,82 @@ function runGame(deltaTime)
 }
 //----------------------------------------------------
 
+//level complete text
+function lvCompText()
+{
+	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
+	
+	context.fillStyle = "black";  
+	context.font="30px Arial";  
+	context.fillText("level Complete!  ", 240, 100);
+	context.fillText("Press ENTER !",240, 200);
+}
+
+//level complete splash
+function runLvComp(deltaTime)
+{
+	if (level == level3)		// go to game complete
+	{
+		gameState = STATE_GAMECOMPLETE;
+		return
+	}
+	
+	var background = new Image();			
+	//background.src = "gameOverSplash.jpg";		//draw bg
+	context.drawImage(background, 0, 0);
+	
+	lvCompText();
+	
+	if(keyboard.isKeyDown(keyboard.KEY_ENTER) == true) 
+	{
+		if (level == level1)		// go to lv 2
+		{
+			level = level2;
+			initialize(level); 
+		
+			gameState = STATE_GAME;
+			return;
+		}
+		
+		if (level == level2)		//go to lv 3
+		{
+			level = level3;
+			initialize(level); 
+		
+			gameState = STATE_GAME;
+			return;
+		}
+	}      
+}
+
+// game complete text
+function gameCompleteText(deltaTime)
+{
+	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
+	
+	context.fillStyle = "black";  
+	context.font="30px Arial";  
+	context.fillText("Game Complete! ", 240, 100);
+	context.fillText("Press 2 to Return to Title  ", 240, 200);
+}
+
+// game complete
+function runGameComplete(deltaTime)
+{
+	var background = new Image();			
+	//background.src = "gameOverSplash.jpg";		//draw bg
+	context.drawImage(background, 0, 0);
+	
+	gameCompleteText();
+	
+	level = level1;		//reset level progress
+	
+	if(keyboard.isKeyDown(keyboard.KEY_2) == true) 
+	{
+		gameState = STATE_TITLE;
+		return;
+	}
+}
 
 // game over text
 function gameOverText()
@@ -85,6 +173,8 @@ function runGameOver(deltaTime)
 	context.drawImage(background, 0, 0);
 	
 	gameOverText();								//draw the text
+	
+	level = level1;		//reset level progress
 	
 //return to title after timer
 	gameOverTimer -= deltaTime;	
