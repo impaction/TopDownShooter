@@ -1,4 +1,8 @@
+github
 https://github.com/acidviews/TopDownShooter.git
+
+trello
+https://trello.com/b/HWFr7E9z
 
 steam
 gankstar83
