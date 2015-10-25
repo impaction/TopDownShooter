@@ -33,25 +33,29 @@ function runTitle(deltaTime)
 //enter game
 	if(keyboard.isKeyDown(keyboard.KEY_ENTER) == true) 
 	{    
-		player.position.set( 5*TILE,45*TILE); //set player pos for lv1
+		player.position.set( 2*TILE,2*TILE); //set player pos for lv1
 		gameState = STATE_GAME;
 		return;     
 	}      
 }
-
 
 //-------------   rungame function ------------------
 function runGame(deltaTime)
 {
 	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
 	
-	//update player 	
+//update player 	
 	player.update(deltaTime);
-	
-	drawMap(level);
-	
-	//draw player
+//draw map level
+	drawMap(level);	
+//draw player
 	player.draw();
+//update draw enemy
+	for(var i=0; i<enemies.length; i++)
+	{
+		enemies[i].update(deltaTime);
+		enemies[i].draw(deltaTime);
+	}
 	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
@@ -59,13 +63,14 @@ function runGame(deltaTime)
 	
 	if(keyboard.isKeyDown(keyboard.KEY_1) == true) 
 	{
-		player.position.set( 5*TILE,45*TILE); //set player pos for lv2
+		player.position.set( 2*TILE,2*TILE); //set player pos for lv2
 		gameState = STATE_LEVELCOMPLETE;
 		return;     
 	}
 	
 	if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true) 
-	{         
+	{    
+		player.position.set( 2*TILE,2*TILE); //set player pos for lv3
 		gameState = STATE_GAMEOVER;
 		return;     
 	} 
@@ -79,7 +84,7 @@ function runGame(deltaTime)
 //----------------------------------------------------
 
 //level complete text
-function lvCompText()
+function lvCompText(deltaTime)
 {
 	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
 	
@@ -156,7 +161,7 @@ function runGameComplete(deltaTime)
 }
 
 // game over text
-function gameOverText()
+function gameOverText(deltaTime)
 {
 	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
 	

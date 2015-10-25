@@ -46,6 +46,8 @@ var LAYER_WALLS = 1;
 var LAYER_LAVA = 2;
 var LAYER_COUNT = 3;
 
+var LAYER_OBJECT_ENEMY= 3;
+
 var MAP = { tw: 50, th: 50 }; 
 //Specifies how big your level is, in tiles. 
 var TILE = 64; 
@@ -63,11 +65,14 @@ var TILESET_COUNT_X = 12;
 var TILESET_COUNT_Y = 6; 
 //How many rows of tile images are in the tileset
 
+//enemy
+var enemies = [];
 
-//new
+//new obj
 var keyboard = new Keyboard();
 var vector2 = new Vector2();
 var player = new Player();
+var enemy = new Enemy();
 
 var cells = [];
 
@@ -100,6 +105,23 @@ function initialize(level)
 			}         
 		}        
 	}
+	
+// add enemies from tile layer
+	idx = 0;
+	for(var y = 0; y < level.layers[LAYER_OBJECT_ENEMY].height; y++) 
+	{        
+		for(var x = 0; x < level.layers[LAYER_OBJECT_ENEMY].width; x++) 
+		{
+			if(level.layers[LAYER_OBJECT_ENEMY].data[idx] != 0) 
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y);
+				var e = new Enemy(px, py);
+				enemies.push(e);
+			}
+			idx++;
+		}
+	} 
 }
 
 

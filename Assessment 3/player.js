@@ -52,7 +52,7 @@ var Player = function()
 	}
 	
 	this.position = new Vector2();  
-	this.position.set( 5*TILE,45*TILE);
+	this.position.set( 2*TILE,2*TILE);
 	
 	this.velocity = new Vector2();
     
