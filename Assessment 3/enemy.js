@@ -59,6 +59,10 @@ var Enemy = function(x, y)
 	
 // aggro player
 	this.agro = false;
+	
+//default stats
+	this.health = 10;
+	
 }
 
 Enemy.prototype.randomDirection = function()

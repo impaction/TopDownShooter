@@ -62,12 +62,65 @@ function runGame(deltaTime)
 	{
 		bullets[i].update(deltaTime);
 		bullets[i].draw(deltaTime);
+		
+		var hit=false
+//enemy collision	
+		for(var j=0; j<enemies.length; j++)
+		{
+			if(intersects( bullets[i].position.x, bullets[i].position.y, TILE, TILE,
+			enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
+			{
+// kill both the bullet and the enemy
+				enemies.splice(j, 1);
+				hit = true;
+				break;
+			}
+		}
+//kill ouside of screen		
+		if (bullets[i].position.x <= -1 || bullets[i].position.y <= -1 || 
+		bullets[i].position.x > 3200 || bullets[i].position.y > 3200)
+		{
+			hit = true;
+		}
+		
+		if (hit == true) 
+		{
+			bullets.splice(i, 1);
+			break;
+		}
 	}
+	
 //update draw grenades
 	for(var i=0; i<grenades.length; i++)
 	{
 		grenades[i].update(deltaTime);
 		grenades[i].draw(deltaTime);
+		
+		var hit=false
+//enemy collision	
+		for(var j=0; j<enemies.length; j++)
+		{
+			if(intersects( grenades[i].position.x, grenades[i].position.y, TILE, TILE,
+			enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
+			{
+// kill both the bullet and the enemy
+				enemies.splice(j, 1);
+				hit = true;
+				break;
+			}
+		}
+//kill ouside of screen		
+		if (grenades[i].position.x <= -1 || grenades[i].position.y <= -1 || 
+		grenades[i].position.x > 3200 || grenades[i].position.y > 3200)
+		{
+			hit = true;
+		}
+	
+		if (hit == true) 
+		{
+			grenades.splice(i, 1);
+			break;
+		}
 	}
 	
 	context.fillStyle = "black";  
