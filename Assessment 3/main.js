@@ -73,6 +73,7 @@ var keyboard = new Keyboard();
 var vector2 = new Vector2();
 var player = new Player();
 var enemy = new Enemy();
+var bullet = new Bullet();
 
 var cells = [];
 

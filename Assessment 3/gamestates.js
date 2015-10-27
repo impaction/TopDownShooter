@@ -56,6 +56,12 @@ function runGame(deltaTime)
 		enemies[i].update(deltaTime);
 		enemies[i].draw(deltaTime);
 	}
+//update draw bullets
+	for(var i=0; i<bullets.length; i++)
+	{
+		bullets[i].update(deltaTime);
+		bullets[i].draw(deltaTime);
+	}
 	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  

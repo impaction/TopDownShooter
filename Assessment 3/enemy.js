@@ -187,14 +187,14 @@ Enemy.prototype.updateWonder = function(deltaTime)
 //collision with walls
 	var Wcell = cellAtTileCoord(LAYER_WALLS, tx, ty);  
 	var Wcellright = cellAtTileCoord(LAYER_WALLS, tx + 1, ty);  
-	var Wcelldown = cellAtTileCoord(LAYER_WALLS, tx, ty + 1);  
-	var Wcelldiag = cellAtTileCoord(LAYER_WALLS, tx + 1, ty + 1);
+	var Wcelldown = cellAtTileCoord(LAYER_WALLS, tx, ty + 2);  
+	var Wcelldiag = cellAtTileCoord(LAYER_WALLS, tx + 1, ty + 2);
 	
 //collision with lava
 	var Lcell = cellAtTileCoord(LAYER_LAVA, tx, ty);  
 	var Lcellright = cellAtTileCoord(LAYER_LAVA, tx + 1, ty);  
-	var Lcelldown = cellAtTileCoord(LAYER_LAVA, tx, ty + 1);  
-	var Lcelldiag = cellAtTileCoord(LAYER_LAVA, tx + 1, ty + 1);
+	var Lcelldown = cellAtTileCoord(LAYER_LAVA, tx, ty + 2);  
+	var Lcelldiag = cellAtTileCoord(LAYER_LAVA, tx + 1, ty + 2);
 	
 // what happens when the enemy is colliding with the wall        
 	if (this.velocity.y > 0)  
@@ -337,7 +337,6 @@ Enemy.prototype.updateAgro = function(deltaTime)
 			this.sprite.setAnimation(E_ANIM_BITE_DOWN);
 		}
 	}
-
 //left
 	if (this.position.x > player.position.x + 2)
 	{
@@ -373,14 +372,14 @@ Enemy.prototype.updateAgro = function(deltaTime)
 //collision with walls
 	var Wcell = cellAtTileCoord(LAYER_WALLS, tx, ty);  
 	var Wcellright = cellAtTileCoord(LAYER_WALLS, tx + 1, ty);  
-	var Wcelldown = cellAtTileCoord(LAYER_WALLS, tx, ty + 1);  
-	var Wcelldiag = cellAtTileCoord(LAYER_WALLS, tx + 1, ty + 1);
+	var Wcelldown = cellAtTileCoord(LAYER_WALLS, tx, ty + 2);  
+	var Wcelldiag = cellAtTileCoord(LAYER_WALLS, tx + 1, ty + 2);
 	
 //collision with lava
 	var Lcell = cellAtTileCoord(LAYER_LAVA, tx, ty);  
 	var Lcellright = cellAtTileCoord(LAYER_LAVA, tx + 1, ty);  
-	var Lcelldown = cellAtTileCoord(LAYER_LAVA, tx, ty + 1);  
-	var Lcelldiag = cellAtTileCoord(LAYER_LAVA, tx + 1, ty + 1);
+	var Lcelldown = cellAtTileCoord(LAYER_LAVA, tx, ty + 2);  
+	var Lcelldiag = cellAtTileCoord(LAYER_LAVA, tx + 1, ty + 2);
 	
 // what happens when the enemy is colliding with the wall        
 	if (this.velocity.y > 0)  

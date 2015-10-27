@@ -12,7 +12,7 @@ var Player = function()
 	this.sprite.buildAnimation(3, 1, 99, 151, 0.2,  // idle
 	[1]);
 
-	for(var i=0; i<ANIM_MAX; i++)					// Max
+	for(var i=0; i<ANIM_MAX; i++)					
 	{
 		this.sprite.setAnimationOffset(i, -50, -75);								
 	}
@@ -55,7 +55,7 @@ Player.prototype.update = function(deltaTime)
 		
 	if (this.shootCooldownTimer >= 0)
 	{ 			
-		this.cooldownTimer -= deltaTime;
+		this.shootCooldownTimer -= deltaTime;
 	}
 	
 	if (this.throwCoolDownTimer >= 0)
@@ -69,6 +69,7 @@ Player.prototype.update = function(deltaTime)
 		//sfxFire.play();
 		this.shooting = true;
 		this.shootCooldownTimer += .5;
+		this.shoot();
 	}
 	
 //throw grenade ,animation 
@@ -146,8 +147,8 @@ Player.prototype.update = function(deltaTime)
 	
 	var cell = cellAtTileCoord(LAYER_WALLS, tx, ty);  
 	var cellright = cellAtTileCoord(LAYER_WALLS, tx + 1, ty);  
-	var celldown = cellAtTileCoord(LAYER_WALLS, tx, ty + 1);  
-	var celldiag = cellAtTileCoord(LAYER_WALLS, tx + 1, ty + 1);
+	var celldown = cellAtTileCoord(LAYER_WALLS, tx, ty + 2);  
+	var celldiag = cellAtTileCoord(LAYER_WALLS, tx + 1, ty + 2);
 	
 // what happens when the player is colliding with the wall        
 	if (this.velocity.y > 0)  
@@ -188,6 +189,12 @@ Player.prototype.update = function(deltaTime)
 			this.velocity.x = 0;        // stop horizontal velocity      
 		} 
 	 }
+}
+
+Player.prototype.shoot = function()
+{
+	var bullet = new Bullet(); 
+	bullets.push(bullet);
 }
 
 Player.prototype.draw = function() 

@@ -1,5 +1,5 @@
-var bullets = []
-var Bullet = function(x, y, moveRight) 
+var bullets = [];
+var Bullet = function() 
 {
 	this.sprite = new Sprite("bullet.png");
 	this.sprite.buildAnimation(1, 1, 32, 32, -1, [0]);
@@ -7,60 +7,41 @@ var Bullet = function(x, y, moveRight)
 	this.sprite.setLoop(0, false);
 	
 	this.position = new Vector2();
-	this.position.set(x, y);
-	
+	this.position.set(player.position.x, player.position.y);
 	this.velocity = new Vector2();
 	
-	this.moveRight = moveRight;
+	this.speed = 400;
+	this.rotation = player.rotation;
 	
-	if(this.moveRight == true)
-		this.velocity.set(MAXDX *2, 0);
-		else
-		this.velocity.set(-MAXDX *2, 0);
+	var velX = 0;
+	var velY = -1;
+// now rotate this vector acording to the players current rotation
+	var s = Math.sin(player.rotation);
+	var c = Math.cos(player.rotation);
+	var xVel = (velX * c) - (velY * s);
+	var yVel = (velX * s) + (velY * c);
+	this.velocity.x = xVel * this.speed;
+	this.velocity.y = yVel * this.speed;
 }
-
-var hit=false;
 
 for(var i=0; i<bullets.length; i++)
 {
 	bullets[i].update(deltaTime);
-	
-	if( bullets[i].position.x -worldOffsetX < 0 ||
-	bullets[i].position.x - worldOffsetX > SCREEN_WIDTH)
-	{
-		hit = true;
-	}
-//enemy collision	
-	for(var j=0; j<enemies.length; j++)
-	{
-		if(intersects( bullets[i].position.x, bullets[i].position.y, TILE, TILE,
-		enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
-		{
-// kill both the bullet and the enemy
-			enemies.splice(j, 1);
-			hit = true;
-// increment the player score
-			PLAYER_SCORE += 10;
-			break;
-		}
-	}
-	
-	if (hit == true) 
-	{
-		bullets.splice(i, 1);
-		break;
-	}
 }
-
-Bullet.prototype.update = function(dt) 
+	
+Bullet.prototype.update = function(deltaTime) 
 {
-	this.sprite.update(dt);
-	this.position.x = Math.floor(this.position.x  + (dt * this.velocity.x));
+	this.sprite.update(deltaTime);
+	
+	this.position.x = this.position.x  +  this.velocity.x * deltaTime;
+	this.position.y = this.position.y  +  this.velocity.y * deltaTime;
 }
 
 Bullet.prototype.draw = function() 
 {
-	var screenX = this.position.x - worldOffsetX;
-	this.sprite.draw(context, screenX, this.position.y);
+	context.save();
+	context.translate(this.position.x- worldOffsetX, this.position.y - worldOffsetY);
+	context.rotate(this.rotation);
+	this.sprite.draw(context, 0,0);		
+	context.restore(); 
 }
-
