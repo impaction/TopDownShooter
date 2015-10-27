@@ -59,16 +59,16 @@ function runGame(deltaTime)
 	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
-	context.fillText("Playing Game SHIFT or 1 !",240, 100);
+	context.fillText("Playing Game 3 or 4 !",240, 100);
 	
-	if(keyboard.isKeyDown(keyboard.KEY_1) == true) 
+	if(keyboard.isKeyDown(keyboard.KEY_3) == true) 
 	{
 		player.position.set( 2*TILE,2*TILE); //set player pos for lv2
 		gameState = STATE_LEVELCOMPLETE;
 		return;     
 	}
 	
-	if(keyboard.isKeyDown(keyboard.KEY_SHIFT) == true) 
+	if(keyboard.isKeyDown(keyboard.KEY_4) == true) 
 	{    
 		player.position.set( 2*TILE,2*TILE); //set player pos for lv3
 		gameState = STATE_GAMEOVER;

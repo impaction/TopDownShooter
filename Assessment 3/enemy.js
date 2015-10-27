@@ -27,16 +27,16 @@ var Enemy = function(x, y)
 	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
 	[21,22,23,24,25,26,27]);
 //bite down
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
+	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
 	[28,29,30,31]);
 //bite right
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
+	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
 	[32,33,34,35]);
 //bite left
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
+	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
 	[36,37,38,39]);
 //bite up
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
+	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
 	[40,41,42,43]);
 //death
 	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
@@ -44,7 +44,7 @@ var Enemy = function(x, y)
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
-		this.sprite.setAnimationOffset(i, -32, -32);								
+		this.sprite.setAnimationOffset(i, -30, -30);								
 	}
 	
 	this.position = new Vector2();
@@ -56,6 +56,9 @@ var Enemy = function(x, y)
 	this.pauseTimer = 0;
 	this.pause = 0;
 	this.randomDirectionTimer = 1;
+	
+// aggro player
+	this.agro = false;
 }
 
 Enemy.prototype.randomDirection = function()
@@ -86,7 +89,15 @@ Enemy.prototype.randomDirection = function()
 	}
 }
 
-Enemy.prototype.update = function(deltaTime) 
+Enemy.prototype.distanceToPlayer = function(x1,y1,x2,y2)
+{
+	x3 = x1 - x2;
+	y3 = y1 - y2;
+	
+	this.distanceOfPlayer = Math.sqrt(x3 * x3 + y3 * y3);
+}
+
+Enemy.prototype.updateWonder = function(deltaTime) 
 {
 	this.sprite.update(deltaTime);
 //random direction on a timer
@@ -167,12 +178,13 @@ Enemy.prototype.update = function(deltaTime)
 		this.moveRight = false;
 	}
 	
-//collision with walls
+//collision detection
 	var tx = pixelToTile(this.position.x);  
 	var ty = pixelToTile(this.position.y);  
-	var nx = (this.position.x)%TILE;         // true if player overlaps right  
-	var ny = (this.position.y)%TILE;         // true if player overlaps below  
+	var nx = (this.position.x)%TILE;         // true if enemy overlaps right  
+	var ny = (this.position.y)%TILE;         // true if enemy overlaps below  
 	
+//collision with walls
 	var Wcell = cellAtTileCoord(LAYER_WALLS, tx, ty);  
 	var Wcellright = cellAtTileCoord(LAYER_WALLS, tx + 1, ty);  
 	var Wcelldown = cellAtTileCoord(LAYER_WALLS, tx, ty + 1);  
@@ -184,11 +196,11 @@ Enemy.prototype.update = function(deltaTime)
 	var Lcelldown = cellAtTileCoord(LAYER_LAVA, tx, ty + 1);  
 	var Lcelldiag = cellAtTileCoord(LAYER_LAVA, tx + 1, ty + 1);
 	
-// what happens when the player is colliding with the wall        
+// what happens when the enemy is colliding with the wall        
 	if (this.velocity.y > 0)  
 	{  
 		if ((Wcelldown && !Wcell) || (Wcelldiag && !Wcellright && nx))  
-		{   // clamp the y position to avoid falling into platform below     
+		{   // clamp the y position to avoid moving into the tile we just hit     
 			this.position.y = tileToPixel(ty);            
 			this.velocity.y = 0;              // stop downward velocity         
 			ny = 0;                           // no longer overlaps the cells below 
@@ -201,7 +213,7 @@ Enemy.prototype.update = function(deltaTime)
 	else if (this.velocity.y < 0)  
 	{  
 		if ((Wcell && !Wcelldown) || (Wcellright && !Wcelldiag && nx))  
-		{   // clamp the y position to avoid jumping into platform above      
+		{   // clamp the y position to avoid moving into the tile we just hit     
 			this.position.y = tileToPixel(ty + 1);          
 			this.velocity.y = 0;             // stop upward velocity     
 // player is no longer really in that cell, we clamped them to the cell below       
@@ -218,7 +230,7 @@ Enemy.prototype.update = function(deltaTime)
 	if (this.velocity.x > 0) 
 	{       
 		if ((Wcellright && !Wcell) || (Wcelldiag  && !Wcelldown && ny))  
-		{  // clamp the x position to avoid moving into the platform we just hit      
+		{  // clamp the x position to avoid moving into the tile we just hit      
 			this.position.x = tileToPixel(tx);         
 			this.velocity.x = 0;      // stop horizontal velocity 
 // reverse direction
@@ -230,7 +242,7 @@ Enemy.prototype.update = function(deltaTime)
 	else if (this.velocity.x < 0) 
 	{         
 		if ((Wcell && !Wcellright) || (Wcelldown && !Wcelldiag && ny))  
-		{  // clamp the x position to avoid moving into the platform we just hit    
+		{  // clamp the x position to avoid moving into the tile we just hit     
 			this.position.x = tileToPixel(tx + 1);         
 			this.velocity.x = 0;        // stop horizontal velocity   
 // reverse direction
@@ -240,11 +252,11 @@ Enemy.prototype.update = function(deltaTime)
 		} 
 	}
 	
-// what happens when the player is colliding with the lava
+// what happens when the enemy is colliding with the lava
 	if (this.velocity.y > 0)  
 	{  
 		if ((Lcelldown && !Lcell) || (Lcelldiag && !Lcellright && nx))  
-		{   // clamp the y position to avoid falling into platform below     
+		{   // clamp the y position to avoid moving into the tile we just hit      
 			this.position.y = tileToPixel(ty);            
 			this.velocity.y = 0;              // stop downward velocity         
 			ny = 0;                           // no longer overlaps the cells below 
@@ -257,7 +269,7 @@ Enemy.prototype.update = function(deltaTime)
 	else if (this.velocity.y < 0)  
 	{  
 		if ((Lcell && !Lcelldown) || (Lcellright && !Lcelldiag && nx))  
-		{   // clamp the y position to avoid jumping into platform above      
+		{   // clamp the y position to avoid moving into the tile we just hit      
 			this.position.y = tileToPixel(ty + 1);          
 			this.velocity.y = 0;             // stop upward velocity     
 // player is no longer really in that cell, we clamped them to the cell below       
@@ -274,7 +286,7 @@ Enemy.prototype.update = function(deltaTime)
 	if (this.velocity.x > 0) 
 	{       
 		if ((Lcellright && !Lcell) || (Lcelldiag  && !Lcelldown && ny))  
-		{  // clamp the x position to avoid moving into the platform we just hit      
+		{  // clamp the x position to avoid moving into the tile we just hit       
 			this.position.x = tileToPixel(tx);         
 			this.velocity.x = 0;      // stop horizontal velocity 
 // reverse direction
@@ -286,7 +298,7 @@ Enemy.prototype.update = function(deltaTime)
 	else if (this.velocity.x < 0) 
 	{         
 		if ((Lcell && !Lcellright) || (Lcelldown && !Lcelldiag && ny))  
-		{  // clamp the x position to avoid moving into the platform we just hit    
+		{  // clamp the x position to avoid moving into the tile we just hit    
 			this.position.x = tileToPixel(tx + 1);         
 			this.velocity.x = 0;        // stop horizontal velocity   
 // reverse direction
@@ -294,6 +306,173 @@ Enemy.prototype.update = function(deltaTime)
 			this.pause = .5;
 			this.moveRight = true;
 		} 
+	}
+}
+
+Enemy.prototype.updateAgro = function(deltaTime)
+{
+	this.sprite.update(deltaTime);
+	
+//speeds acceleration		
+	var speed = 100;
+	var ddx = 0;
+	var ddy = 0;
+	
+// go toward player	
+//up
+	if (this.position.y > player.position.y + 2)
+	{
+		ddy = -speed;
+		if (this.sprite.currentAnimation != E_ANIM_BITE_UP)
+		{
+			this.sprite.setAnimation(E_ANIM_BITE_UP);
+		}
+	}
+//down	
+	if (this.position.y < player.position.y - 2)
+	{
+		ddy = speed;
+		if (this.sprite.currentAnimation != E_ANIM_BITE_DOWN)
+		{
+			this.sprite.setAnimation(E_ANIM_BITE_DOWN);
+		}
+	}
+
+//left
+	if (this.position.x > player.position.x + 2)
+	{
+		ddx = -speed;
+		if (this.sprite.currentAnimation != E_ANIM_BITE_LEFT)
+		{
+			this.sprite.setAnimation(E_ANIM_BITE_LEFT);
+		}
+	}
+//right	
+	if (this.position.x < player.position.x - 2)
+	{
+		ddx = speed;
+		if (this.sprite.currentAnimation != E_ANIM_BITE_RIGHT)
+		{
+			this.sprite.setAnimation(E_ANIM_BITE_RIGHT);
+		}
+	}
+
+//update position and velocity		
+	this.velocity.x = ddx;     
+	this.velocity.y = ddy;
+	this.position.y = this.position.y + this.velocity.y * deltaTime;     
+	this.position.x = this.position.x + this.velocity.x * deltaTime;
+	
+		
+//collision detection
+	var tx = pixelToTile(this.position.x);  
+	var ty = pixelToTile(this.position.y);  
+	var nx = (this.position.x)%TILE;         // true if enemy overlaps right  
+	var ny = (this.position.y)%TILE;         // true if enemy overlaps below  
+	
+//collision with walls
+	var Wcell = cellAtTileCoord(LAYER_WALLS, tx, ty);  
+	var Wcellright = cellAtTileCoord(LAYER_WALLS, tx + 1, ty);  
+	var Wcelldown = cellAtTileCoord(LAYER_WALLS, tx, ty + 1);  
+	var Wcelldiag = cellAtTileCoord(LAYER_WALLS, tx + 1, ty + 1);
+	
+//collision with lava
+	var Lcell = cellAtTileCoord(LAYER_LAVA, tx, ty);  
+	var Lcellright = cellAtTileCoord(LAYER_LAVA, tx + 1, ty);  
+	var Lcelldown = cellAtTileCoord(LAYER_LAVA, tx, ty + 1);  
+	var Lcelldiag = cellAtTileCoord(LAYER_LAVA, tx + 1, ty + 1);
+	
+// what happens when the enemy is colliding with the wall        
+	if (this.velocity.y > 0)  
+	{  
+		if ((Wcelldown && !Wcell) || (Wcelldiag && !Wcellright && nx))  
+		{   // clamp the y position to avoid moving into the tile we just hit     
+			this.position.y = tileToPixel(ty);            
+			this.velocity.y = 0;              // stop downward velocity         
+			ny = 0;                           // no longer overlaps the cells below 
+		}     
+	}
+	else if (this.velocity.y < 0)  
+	{  
+		if ((Wcell && !Wcelldown) || (Wcellright && !Wcelldiag && nx))  
+		{   // clamp the y position to avoid moving into the tile we just hit     
+			this.position.y = tileToPixel(ty +1);          
+			this.velocity.y = 0;             // stop upward velocity     
+// player is no longer really in that cell, we clamped them to the cell below       
+			Wcell = Wcelldown;                         
+			Wcellright = Wcelldiag;          // (ditto)      
+			ny = 0;                        // player no longer overlaps the cells below   		         
+		}
+	}
+
+	if (this.velocity.x > 0) 
+	{       
+		if ((Wcellright && !Wcell) || (Wcelldiag  && !Wcelldown && ny))  
+		{  // clamp the x position to avoid moving into the tile we just hit      
+			this.position.x = tileToPixel(tx);         
+			this.velocity.x = 0;      // stop horizontal velocity 
+		}  
+	} 
+	else if (this.velocity.x < 0) 
+	{         
+		if ((Wcell && !Wcellright) || (Wcelldown && !Wcelldiag && ny))  
+		{  // clamp the x position to avoid moving into the tile we just hit     
+			this.position.x = tileToPixel(tx +1);         
+			this.velocity.x = 0;        // stop horizontal velocity   
+		} 
+	}
+	
+// what happens when the enemy is colliding with the lava
+	if (this.velocity.y > 0)  
+	{  
+		if ((Lcelldown && !Lcell) || (Lcelldiag && !Lcellright && nx))  
+		{   // clamp the y position to avoid moving into the tile we just hit      
+			this.position.y = tileToPixel(ty);            
+			this.velocity.y = 0;              // stop downward velocity         
+			ny = 0;                           // no longer overlaps the cells below 
+		}     
+	}
+	else if (this.velocity.y < 0)  
+	{  
+		if ((Lcell && !Lcelldown) || (Lcellright && !Lcelldiag && nx))  
+		{   // clamp the y position to avoid moving into the tile we just hit      
+			this.position.y = tileToPixel(ty +1);          
+			this.velocity.y = 0;             // stop upward velocity     
+// player is no longer really in that cell, we clamped them to the cell below       
+			Lcell = Lcelldown;                         
+			Lcellright = Lcelldiag;          // (ditto)      
+			ny = 0;                        // player no longer overlaps the cells below   		         
+		}
+	}
+
+	if (this.velocity.x > 0) 
+	{       
+		if ((Lcellright && !Lcell) || (Lcelldiag  && !Lcelldown && ny))  
+		{  // clamp the x position to avoid moving into the tile we just hit       
+			this.position.x = tileToPixel(tx);         
+			this.velocity.x = 0;      // stop horizontal velocity 
+		}  
+	} 
+	else if (this.velocity.x < 0) 
+	{         
+		if ((Lcell && !Lcellright) || (Lcelldown && !Lcelldiag && ny))  
+		{  // clamp the x position to avoid moving into the tile we just hit    
+			this.position.x = tileToPixel(tx +1);         
+			this.velocity.x = 0;        // stop horizontal velocity   
+		} 
+	}
+}
+
+Enemy.prototype.update = function(deltaTime)
+{
+	this.distanceToPlayer(this.position.x, this.position.y, player.position.x, player.position.y);
+	if (this.distanceOfPlayer <= 400)
+	{
+		this.updateAgro(deltaTime);
+	}
+	else
+	{
+		this.updateWonder(deltaTime);
 	}
 }
 
