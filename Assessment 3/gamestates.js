@@ -50,6 +50,7 @@ function runGame(deltaTime)
 	drawMap(level);	
 //draw player
 	player.draw();
+	
 //update draw enemy
 	for(var i=0; i<enemies.length; i++)
 	{
@@ -61,6 +62,12 @@ function runGame(deltaTime)
 	{
 		bullets[i].update(deltaTime);
 		bullets[i].draw(deltaTime);
+	}
+//update draw grenades
+	for(var i=0; i<grenades.length; i++)
+	{
+		grenades[i].update(deltaTime);
+		grenades[i].draw(deltaTime);
 	}
 	
 	context.fillStyle = "black";  

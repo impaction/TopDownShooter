@@ -67,6 +67,8 @@ var TILESET_COUNT_Y = 6;
 
 //enemy
 var enemies = [];
+var bullets = [];
+var grenades = [];
 
 //new obj
 var keyboard = new Keyboard();
@@ -74,6 +76,7 @@ var vector2 = new Vector2();
 var player = new Player();
 var enemy = new Enemy();
 var bullet = new Bullet();
+var grenade = new Grenade();
 
 var cells = [];
 

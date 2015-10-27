@@ -40,7 +40,19 @@ var Player = function()
 	this.shootCooldownTimer = 0;
 	this.throwCoolDownTimer = 0;
 }; 
-		
+	
+Player.prototype.shoot = function()
+{
+	var bullet = new Bullet(); 
+	bullets.push(bullet);
+}
+
+Player.prototype.throwG = function()
+{
+	var grenade = new Grenade(); 
+	grenades.push(grenade);
+}
+	
 Player.prototype.update = function(deltaTime)
 {	
 //update sprite
@@ -78,6 +90,7 @@ Player.prototype.update = function(deltaTime)
 		//sfxFire.play();
 		this.throwing = true;
 		this.throwCoolDownTimer += 6;
+		this.throwG();
 	}
 	
 // rotate left   
@@ -191,11 +204,6 @@ Player.prototype.update = function(deltaTime)
 	 }
 }
 
-Player.prototype.shoot = function()
-{
-	var bullet = new Bullet(); 
-	bullets.push(bullet);
-}
 
 Player.prototype.draw = function() 
 { 
