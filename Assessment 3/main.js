@@ -77,6 +77,7 @@ var player = new Player();
 var enemy = new Enemy();
 var bullet = new Bullet();
 var grenade = new Grenade();
+var explosion = new Explosion();
 
 var cells = [];
 

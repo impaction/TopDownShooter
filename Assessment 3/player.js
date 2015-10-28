@@ -52,7 +52,7 @@ Player.prototype.throwG = function()
 	var grenade = new Grenade(); 
 	grenades.push(grenade);
 }
-	
+
 Player.prototype.update = function(deltaTime)
 {	
 //update sprite
