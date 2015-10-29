@@ -45,7 +45,6 @@ var LAYER_FLOOR = 0;
 var LAYER_WALLS = 1;
 var LAYER_LAVA = 2;
 var LAYER_COUNT = 3;
-
 var LAYER_OBJECT_ENEMY= 3;
 
 var MAP = { tw: 50, th: 50 }; 
@@ -67,6 +66,7 @@ var TILESET_COUNT_Y = 6;
 
 //enemy
 var enemies = [];
+var bosses = [];
 var bullets = [];
 var grenades = [];
 
@@ -75,24 +75,25 @@ var keyboard = new Keyboard();
 var vector2 = new Vector2();
 var player = new Player();
 var enemy = new Enemy();
+var boss = new Boss();
 var bullet = new Bullet();
 var grenade = new Grenade();
 var explosion = new Explosion();
 
 var cells = [];
 
-function initialize(level) 
+function initialize(levelN) 
 {          
 	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++)  // initialize the collision map
 	{           
 		cells[layerIdx] = [];             
 		var idx = 0;             
-		for(var y = 0; y < level.layers[layerIdx].height; y++)
+		for(var y = 0; y < levelN.layers[layerIdx].height; y++)
 		{                     
 			cells[layerIdx][y] = [];             
-			for(var x = 0; x < level.layers[layerIdx].width; x++) 
+			for(var x = 0; x < levelN.layers[layerIdx].width; x++) 
 			{                 
-				if(level.layers[layerIdx].data[idx] != 0) 
+				if(levelN.layers[layerIdx].data[idx] != 0) 
 				{ 
 // for each tile we find in the layer data, we need to create 4 collisions because 
 //our collision squares are 35x35 but the tile in the level are 70x70                    
@@ -113,20 +114,20 @@ function initialize(level)
 	
 // add enemies from tile layer
 	idx = 0;
-	for(var y = 0; y < level.layers[LAYER_OBJECT_ENEMY].height; y++) 
+	for(var y = 0; y < levelN.layers[LAYER_OBJECT_ENEMY].height; y++) 
 	{        
-		for(var x = 0; x < level.layers[LAYER_OBJECT_ENEMY].width; x++) 
+		for(var x = 0; x < levelN.layers[LAYER_OBJECT_ENEMY].width; x++) 
 		{
-			if(level.layers[LAYER_OBJECT_ENEMY].data[idx] != 0) 
+			if(levelN.layers[LAYER_OBJECT_ENEMY].data[idx] != 0) 
 			{
 				var px = tileToPixel(x);
 				var py = tileToPixel(y);
-				var e = new Enemy(px, py);
-				enemies.push(e);
+				var enemy = new Enemy(px, py);
+				enemies.push(enemy);
 			}
 			idx++;
 		}
-	} 
+	} 	
 }
 
 
@@ -279,7 +280,7 @@ function run()
 	}
 }
 
-initialize(level);
+initialize(levelN);
 
 //-------------------- Don't modify anything below here
 // This code will set up the framework so that the 'run' function is called 60 times per second.

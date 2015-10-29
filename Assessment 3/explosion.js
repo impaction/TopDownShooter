@@ -34,12 +34,7 @@ Explosion.prototype.explode = function(posX, posY)
 	var explosion = new Explosion(posX, posY); 
 	explosions.push(explosion);
 }
-/*
-for(var i=0; i<explosions.length; i++)
-{
-	explosions[i].update(deltaTime);
-}
-*/	
+	
 Explosion.prototype.update = function(deltaTime) 
 {
 	this.sprite.update(deltaTime);

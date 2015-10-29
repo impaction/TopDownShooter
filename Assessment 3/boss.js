@@ -1,17 +1,17 @@
-//enemy animation variables
-var E_ANIM_WALK_DOWN = 0;
-var E_ANIM_WALK_RIGHT = 1;
-var E_ANIM_WALK_LEFT = 2;
-var E_ANIM_WALK_UP = 3;
-var E_ANIM_BITE_DOWN = 4;
-var E_ANIM_BITE_RIGHT = 5;
-var E_ANIM_BITE_LEFT = 6
-var E_ANIM_BITE_UP = 7;
-var E_ANIM_DEATH = 8;
+//boss animation variables
+var B_ANIM_WALK_DOWN = 0;
+var B_ANIM_WALK_RIGHT = 1;
+var B_ANIM_WALK_LEFT = 2;
+var B_ANIM_WALK_UP = 3;
+var B_ANIM_BITE_DOWN = 4;
+var B_ANIM_BITE_RIGHT = 5;
+var B_ANIM_BITE_LEFT = 6
+var B_ANIM_BITE_UP = 7;
+var B_ANIM_DEATH = 8;
 
-var E_ANIM_MAX = 9;
+var B_ANIM_MAX = 9;
 
-var Enemy = function(x, y) 
+var Boss = function() 
 {  
 	this.sprite = new Sprite("zombieEnemy.png");
 //walk down
@@ -48,7 +48,7 @@ var Enemy = function(x, y)
 	}
 	
 	this.position = new Vector2();
-	this.position.set(x,y);
+	this.position.set(45*TILE, 5*TILE);
 	this.velocity = new Vector2();
 	
 //default directions	
@@ -60,9 +60,17 @@ var Enemy = function(x, y)
 // aggro player
 	this.agro = false;
 	
+//default stats
+	this.health = 50;
 }
 
-Enemy.prototype.randomDirection = function()
+Boss.prototype.spawn = function()
+{
+	var boss = new Boss(); 
+	bosses.push(boss);
+}
+
+Boss.prototype.randomDirection = function()
 {
 	this.moveUp = false;
 	this.moveDown = false
@@ -90,7 +98,7 @@ Enemy.prototype.randomDirection = function()
 	}
 }
 
-Enemy.prototype.distanceToPlayer = function(x1,y1,x2,y2)
+Boss.prototype.distanceToPlayer = function(x1,y1,x2,y2)
 {
 	x3 = x1 - x2;
 	y3 = y1 - y2;
@@ -98,7 +106,7 @@ Enemy.prototype.distanceToPlayer = function(x1,y1,x2,y2)
 	this.distanceOfPlayer = Math.sqrt(x3 * x3 + y3 * y3);
 }
 
-Enemy.prototype.updateWonder = function(deltaTime) 
+Boss.prototype.updateWonder = function(deltaTime) 
 {
 	this.sprite.update(deltaTime);
 //random direction on a timer
@@ -310,7 +318,7 @@ Enemy.prototype.updateWonder = function(deltaTime)
 	}
 }
 
-Enemy.prototype.updateAgro = function(deltaTime)
+Boss.prototype.updateAgro = function(deltaTime)
 {
 	this.sprite.update(deltaTime);
 	
@@ -463,8 +471,13 @@ Enemy.prototype.updateAgro = function(deltaTime)
 	}
 }
 
-Enemy.prototype.update = function(deltaTime)
+Boss.prototype.update = function(deltaTime)
 {
+	if (this.health <=0)
+	{
+		bosses.splice(i, 1);
+	}
+	
 	this.distanceToPlayer(this.position.x, this.position.y, player.position.x, player.position.y);
 	if (this.distanceOfPlayer <= 400)
 	{
@@ -477,7 +490,7 @@ Enemy.prototype.update = function(deltaTime)
 	this.draw();
 }
 
-Enemy.prototype.draw = function()
+Boss.prototype.draw = function()
 {
 	this.sprite.draw(context, this.position.x - worldOffsetX, 
 							  this.position.y - worldOffsetY);							  

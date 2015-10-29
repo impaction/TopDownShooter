@@ -28,7 +28,7 @@ var Player = function()
     
 	this.directionX = 0;
 	this.directionY = 0;
-	this.rotation = 0;
+	this.rotation = 0;	
 	
 	this.xspeed = 0;
 	this.yspeed = 0;
@@ -89,7 +89,7 @@ Player.prototype.update = function(deltaTime)
 	{
 		//sfxFire.play();
 		this.throwing = true;
-		this.throwCoolDownTimer += 6;
+		this.throwCoolDownTimer += 2;
 		this.throwG();
 	}
 	
@@ -202,6 +202,14 @@ Player.prototype.update = function(deltaTime)
 			this.velocity.x = 0;        // stop horizontal velocity      
 		} 
 	 }
+	 
+	 /*if (level == level3)
+		{
+			if (enemies = [])
+			{
+				boss.spawn(2750, 320);
+			}
+		}*/
 }
 
 
