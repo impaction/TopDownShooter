@@ -62,12 +62,19 @@ var Boss = function()
 	
 //default stats
 	this.health = 50;
+	this.shootcd = 1.5;
 }
 
 Boss.prototype.spawn = function()
 {
 	var boss = new Boss(); 
 	bosses.push(boss);
+}
+
+Enemy.prototype.shoot = function(EbulX, EbulY, EbulVX, EbulVY)
+{
+	var ebullet = new Ebullet(EbulX, EbulY, EbulVX, EbulVY); 
+	ebullets.push(ebullet);
 }
 
 Boss.prototype.randomDirection = function()
@@ -323,7 +330,7 @@ Boss.prototype.updateAgro = function(deltaTime)
 	this.sprite.update(deltaTime);
 	
 //speeds acceleration		
-	var speed = 100;
+	var speed = 150;
 	var ddx = 0;
 	var ddy = 0;
 	
@@ -364,6 +371,17 @@ Boss.prototype.updateAgro = function(deltaTime)
 			this.sprite.setAnimation(E_ANIM_BITE_RIGHT);
 		}
 	}
+	
+	if (this.shootcd >=0)
+	{
+		this.shootcd -= deltaTime;
+	}
+	
+	if (this.shootcd <= 0)
+	{
+		enemy.shoot(this.position.x, this.position.y, this.velocity.x, this.velocity.y);
+		this.shootcd = 1.25;
+	}	
 
 //update position and velocity		
 	this.velocity.x = ddx;     
@@ -479,7 +497,7 @@ Boss.prototype.update = function(deltaTime)
 	}
 	
 	this.distanceToPlayer(this.position.x, this.position.y, player.position.x, player.position.y);
-	if (this.distanceOfPlayer <= 400)
+	if (this.distanceOfPlayer <= 450)
 	{
 		this.updateAgro(deltaTime);
 	}

@@ -64,11 +64,13 @@ var TILESET_COUNT_X = 12;
 var TILESET_COUNT_Y = 6; 
 //How many rows of tile images are in the tileset
 
-//enemy
+//arrays
 var enemies = [];
 var bosses = [];
 var bullets = [];
+var ebullets = [];
 var grenades = [];
+var explosions = [];
 
 //new obj
 var keyboard = new Keyboard();
@@ -77,6 +79,7 @@ var player = new Player();
 var enemy = new Enemy();
 var boss = new Boss();
 var bullet = new Bullet();
+var ebullet = new Ebullet();
 var grenade = new Grenade();
 var explosion = new Explosion();
 

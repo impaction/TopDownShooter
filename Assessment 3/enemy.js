@@ -50,7 +50,10 @@ var Enemy = function(x, y)
 	this.position = new Vector2();
 	this.position.set(x,y);
 	this.velocity = new Vector2();
-	
+
+	this.rotation = 0;
+	this.speed = 100;
+
 //default directions	
 	this.whichWay = 0;
 	this.pauseTimer = 0;
@@ -59,7 +62,13 @@ var Enemy = function(x, y)
 	
 // aggro player
 	this.agro = false;
-	
+	this.shootcd = 3;
+}
+
+Enemy.prototype.shoot = function(EbulX, EbulY, EbulVX, EbulVY)
+{
+	var ebullet = new Ebullet(EbulX, EbulY, EbulVX, EbulVY); 
+	ebullets.push(ebullet);
 }
 
 Enemy.prototype.randomDirection = function()
@@ -74,19 +83,19 @@ Enemy.prototype.randomDirection = function()
 	
 	if (this.whichWay == 1)
 	{
-		this.moveUp = true;
+		this.moveUp = true; //0
 	}
 	if (this.whichWay == 2)
 	{
-		this.moveDown = true;
+		this.moveDown = true; //3
 	}
 	if (this.whichWay == 3)
 	{
-		this.moveLeft = true;
+		this.moveLeft = true; //4.5
 	}
 	if (this.whichWay == 4)
 	{
-		this.moveRight = true;
+		this.moveRight = true; //1.5
 	}
 }
 
@@ -134,7 +143,7 @@ Enemy.prototype.updateWonder = function(deltaTime)
 		{
 			this.sprite.setAnimation(E_ANIM_WALK_UP);
 		}
-		ddy = ddy - speed;    // enemy wants to go up
+		ddy = ddy - speed;    // enemy wants to go up 
 	}
 	
 	if(this.moveRight == true)
@@ -163,7 +172,7 @@ Enemy.prototype.updateWonder = function(deltaTime)
 		}
 		ddx = ddx - speed;   // enemy wants to go left
 	}
-		
+	
 //update position and velocity		
 	this.velocity.x = ddx;     
 	this.velocity.y = ddy;
@@ -356,7 +365,19 @@ Enemy.prototype.updateAgro = function(deltaTime)
 			this.sprite.setAnimation(E_ANIM_BITE_RIGHT);
 		}
 	}
-
+	
+	if (this.shootcd >=0)
+	{
+		this.shootcd -= deltaTime;
+	}
+	
+	if (this.shootcd <= 0)
+	{
+		this.shoot(this.position.x, this.position.y, this.velocity.x, this.velocity.y);
+		this.shootcd = 3;
+	}	
+	
+	
 //update position and velocity		
 	this.velocity.x = ddx;     
 	this.velocity.y = ddy;
@@ -466,7 +487,7 @@ Enemy.prototype.updateAgro = function(deltaTime)
 Enemy.prototype.update = function(deltaTime)
 {
 	this.distanceToPlayer(this.position.x, this.position.y, player.position.x, player.position.y);
-	if (this.distanceOfPlayer <= 400)
+	if (this.distanceOfPlayer <= 350)
 	{
 		this.updateAgro(deltaTime);
 	}

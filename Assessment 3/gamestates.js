@@ -62,6 +62,36 @@ function runGame(deltaTime)
 	{
 		enemies[i].update(deltaTime);	
 	}
+//update draw enemy bullets
+	for(var i=0; i<ebullets.length; i++)
+	{
+		ebullets[i].update(deltaTime);
+		ebullets[i].draw(deltaTime);
+		
+		var ebhit= false;
+		
+		if(intersects(ebullets[i].position.x, ebullets[i].position.y, TILE, TILE,
+			player.position.x, player.position.y, TILE, TILE) == true)
+			{
+// kill the bullet
+				player.health -= 5;
+				ebullets.splice(i, 1);
+				break;
+			}
+		
+//kill ouside of screen		
+		if (ebullets[i].position.x <= -1 || ebullets[i].position.y <= -1 || 
+		ebullets[i].position.x > 3200 || ebullets[i].position.y > 3200)
+		{
+			ebhit = true;
+		}
+		
+		if (ebhit == true) 
+		{
+			ebullets.splice(i, 1);
+			break;
+		}
+	}	
 	
 //update draw bullets
 	for(var i=0; i<bullets.length; i++)
@@ -69,7 +99,7 @@ function runGame(deltaTime)
 		bullets[i].update(deltaTime);
 		bullets[i].draw(deltaTime);
 		
-		var hit= false
+		var bhit= false
 //boss collision
 		for(var j=0; j<bosses.length; j++)
 		{
@@ -78,7 +108,7 @@ function runGame(deltaTime)
 			{
 // kill both the bullet and the enemy
 				bosses[j].health -= 5;
-				hit = true;
+				bhit = true;
 				break;
 			}
 		}		
@@ -96,7 +126,7 @@ function runGame(deltaTime)
 				}
 // kill both the bullet and the enemy
 				enemies.splice(j, 1);
-				hit = true;
+				bhit = true;
 				break;
 			}
 		}
@@ -104,10 +134,10 @@ function runGame(deltaTime)
 		if (bullets[i].position.x <= -1 || bullets[i].position.y <= -1 || 
 		bullets[i].position.x > 3200 || bullets[i].position.y > 3200)
 		{
-			hit = true;
+			bhit = true;
 		}
 		
-		if (hit == true) 
+		if (bhit == true) 
 		{
 			bullets.splice(i, 1);
 			break;
@@ -120,7 +150,7 @@ function runGame(deltaTime)
 		grenades[i].update(deltaTime);
 		grenades[i].draw(deltaTime);
 //splice var		
-		var hit = false;
+		var ghit = false;
 //splice timer		
 		if (grenades[i].timer >=0)
 		{
@@ -129,18 +159,38 @@ function runGame(deltaTime)
 	
 		if (grenades[i].timer <= 0)
 		{
-			hit = true;
+			ghit = true;
+		}
+//enemies collision		
+		for(var j=0; j<enemies.length; j++)
+		{
+			if(intersects( grenades[i].position.x, grenades[i].position.y, TILE, TILE,
+			enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
+			{
+				ghit = true;
+			}
+		}
+//boss collision		
+		for(var j=0; j<bosses.length; j++)
+		{
+			if(intersects( grenades[i].position.x, grenades[i].position.y, TILE, TILE,
+			bosses[j].position.x, bosses[j].position.y, TILE, TILE) == true)
+			{// kill the boss hp
+				bosses[j].health -= 10;
+				ghit = true;
+	
+			}
 		}
 //off screen		
 		if (grenades[i].position.x <= -1 || grenades[i].position.y <= -1 || 
 		grenades[i].position.x > 3200 || grenades[i].position.y > 3200)
 		{
-			hit = true;
+			ghit = true;
 		}
 //explode & splce		
-		if (hit == true) 
+		if (ghit == true) 
 		{
-			explosion.explode(grenades[i].position.x -120, grenades[i].position.y);
+			explosion.explode(grenades[i].position.x , grenades[i].position.y);
 			grenades.splice(i, 1);
 			break;
 		}
@@ -152,20 +202,7 @@ function runGame(deltaTime)
 		explosions[i].update(deltaTime);
 		
 		if (explosions[i])
-		{
-//boss collision
-			for(var j=0; j<bosses.length; j++)
-			{
-				if(intersects( explosions[i].position.x, explosions[i].position.y, TILE, TILE,
-				bosses[j].position.x, bosses[j].position.y, TILE, TILE) == true)
-				{
-// kill the boss
-					bosses[j].health -= 10;
-					hit = true;
-					break;
-				}
-			}
-			
+		{	
 			for(var j=0; j<enemies.length; j++)
 			{
 				if(intersects(explosions[i].position.x, explosions[i].position.y , TILE, TILE,
@@ -223,8 +260,14 @@ function lvCompText(deltaTime)
 //level complete splash
 function runLvComp(deltaTime)
 {
-	enemies.splice( i, enemies.length);
+	bullets.splice( i, bullets.length);
+	grenades.splice( i, grenades.length);
 	player.rotation = 0;
+	player.health = 100;
+	
+	bosses.splice( i, bosses.length);
+	enemies.splice( i, enemies.length);
+	ebullets.splice( i, ebullets.length);
 	
 	if (levelN == level3)		// go to game complete
 	{
@@ -339,7 +382,17 @@ function runGameOver(deltaTime)
 	gameOverText();								//draw the text
 	
 	levelN = level1;		//reset level progress
+	
+//clear the arrays	
+	bullets.splice( i, bullets.length);
+	grenades.splice( i, grenades.length);
+	player.rotation = 0;
+	player.health = 100;
+	
+	bosses.splice( i, bosses.length);
 	enemies.splice( i, enemies.length);
+	ebullets.splice( i, ebullets.length);
+	
 	player.position.set( 2*TILE,2*TILE); //set player pos for lv1
 	initialize(levelN);
 	
