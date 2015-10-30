@@ -50,6 +50,7 @@ var Boss = function()
 	this.position = new Vector2();
 	this.position.set(45*TILE, 5*TILE);
 	this.velocity = new Vector2();
+	this.speed = 150;
 	
 //default directions	
 	this.whichWay = 0;
@@ -138,7 +139,6 @@ Boss.prototype.updateWonder = function(deltaTime)
 	}
 		
 //speeds acceleration		
-	var speed = 100;
 	var ddx = 0;
 	var ddy = 0;
 	
@@ -149,7 +149,7 @@ Boss.prototype.updateWonder = function(deltaTime)
 		{
 			this.sprite.setAnimation(E_ANIM_WALK_UP);
 		}
-		ddy = ddy - speed;    // enemy wants to go up
+		ddy = ddy - this.speed;    // enemy wants to go up
 	}
 	
 	if(this.moveRight == true)
@@ -158,7 +158,7 @@ Boss.prototype.updateWonder = function(deltaTime)
 		{
 			this.sprite.setAnimation(E_ANIM_WALK_RIGHT);
 		}
-		ddx = ddx + speed;   // enemy wants to go right
+		ddx = ddx +  this.speed;   // enemy wants to go right
 	}
 		
 	if(this.moveDown == true)
@@ -167,7 +167,7 @@ Boss.prototype.updateWonder = function(deltaTime)
 		{
 			this.sprite.setAnimation(E_ANIM_WALK_DOWN);
 		}
-		ddy = ddy + speed;    // enemy wants to go down
+		ddy = ddy +  this.speed;    // enemy wants to go down
 	}
 		
 	if(this.moveLeft == true)
@@ -176,7 +176,7 @@ Boss.prototype.updateWonder = function(deltaTime)
 		{
 			this.sprite.setAnimation(E_ANIM_WALK_LEFT);
 		}
-		ddx = ddx - speed;   // enemy wants to go left
+		ddx = ddx -  this.speed;   // enemy wants to go left
 	}
 		
 //update position and velocity		
@@ -330,7 +330,6 @@ Boss.prototype.updateAgro = function(deltaTime)
 	this.sprite.update(deltaTime);
 	
 //speeds acceleration		
-	var speed = 150;
 	var ddx = 0;
 	var ddy = 0;
 	
@@ -338,7 +337,7 @@ Boss.prototype.updateAgro = function(deltaTime)
 //up
 	if (this.position.y > player.position.y + 2)
 	{
-		ddy = -speed;
+		ddy = - this.speed;
 		if (this.sprite.currentAnimation != E_ANIM_BITE_UP)
 		{
 			this.sprite.setAnimation(E_ANIM_BITE_UP);
@@ -347,7 +346,7 @@ Boss.prototype.updateAgro = function(deltaTime)
 //down	
 	if (this.position.y < player.position.y - 2)
 	{
-		ddy = speed;
+		ddy = this.speed;
 		if (this.sprite.currentAnimation != E_ANIM_BITE_DOWN)
 		{
 			this.sprite.setAnimation(E_ANIM_BITE_DOWN);
@@ -356,7 +355,7 @@ Boss.prototype.updateAgro = function(deltaTime)
 //left
 	if (this.position.x > player.position.x + 2)
 	{
-		ddx = -speed;
+		ddx = - this.speed;
 		if (this.sprite.currentAnimation != E_ANIM_BITE_LEFT)
 		{
 			this.sprite.setAnimation(E_ANIM_BITE_LEFT);
@@ -365,7 +364,7 @@ Boss.prototype.updateAgro = function(deltaTime)
 //right	
 	if (this.position.x < player.position.x - 2)
 	{
-		ddx = speed;
+		ddx =  this.speed;
 		if (this.sprite.currentAnimation != E_ANIM_BITE_RIGHT)
 		{
 			this.sprite.setAnimation(E_ANIM_BITE_RIGHT);

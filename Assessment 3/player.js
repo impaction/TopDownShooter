@@ -33,7 +33,7 @@ var Player = function()
 	this.xspeed = 0;
 	this.yspeed = 0;
 	this.speed = 250;
-	this.turnspeed = 10;
+	this.turnspeed = 8;
 	
 	this.shooting = false;
 	this.throwing = false;
@@ -87,7 +87,7 @@ Player.prototype.update = function(deltaTime)
 	{
 		//sfxFire.play();
 		this.shooting = true;
-		this.shootCooldownTimer += .5;
+		this.shootCooldownTimer += .3;
 		this.shoot();
 	}
 	
@@ -96,7 +96,7 @@ Player.prototype.update = function(deltaTime)
 	{
 		//sfxFire.play();
 		this.throwing = true;
-		this.throwCoolDownTimer += 2;
+		this.throwCoolDownTimer += 5;
 		this.throwG();
 	}
 	
@@ -209,6 +209,55 @@ Player.prototype.update = function(deltaTime)
 			this.velocity.x = 0;        // stop horizontal velocity      
 		} 
 	 }
+//collision with lava
+	var Lcell = cellAtTileCoord(LAYER_LAVA, tx, ty);  
+	var Lcellright = cellAtTileCoord(LAYER_LAVA, tx + 1, ty);  
+	var Lcelldown = cellAtTileCoord(LAYER_LAVA, tx, ty + 1);  
+	var Lcelldiag = cellAtTileCoord(LAYER_LAVA, tx + 1, ty + 1);
+	
+// what happens when the player is colliding with the lava
+	if (this.velocity.y > 0)  
+	{  
+		if ((Lcelldown && !Lcell) || (Lcelldiag && !Lcellright && nx))  
+		{   // clamp the y position to avoid moving into the tile we just hit      
+			this.position.y = this.position.y - 16; //tileToPixel(ty);            
+			this.velocity.y = 0;              // stop downward velocity         
+			ny = 0;                           // no longer overlaps the cells below
+			this.health -= 1;
+		}     
+	}
+	else if (this.velocity.y < 0)  
+	{  
+		if ((Lcell && !Lcelldown) || (Lcellright && !Lcelldiag && nx))  
+		{   // clamp the y position to avoid moving into the tile we just hit      
+			this.position.y = this.position.y +16; //tileToPixel(ty +1);          
+			this.velocity.y = 0;             // stop upward velocity     
+// player is no longer really in that cell, we clamped them to the cell below       
+			Lcell = Lcelldown;                         
+			Lcellright = Lcelldiag;          // (ditto)      
+			ny = 0;                        // player no longer overlaps the cells below 
+			this.health -= 1;
+		}
+	}
+
+	if (this.velocity.x > 0) 
+	{       
+		if ((Lcellright && !Lcell) || (Lcelldiag  && !Lcelldown && ny))  
+		{  // clamp the x position to avoid moving into the tile we just hit       
+			this.position.x = this.position.x -16; //tileToPixel(tx);         
+			this.velocity.x = 0;      // stop horizontal velocity 
+			this.health -= 1;
+		}  
+	} 
+	else if (this.velocity.x < 0) 
+	{         
+		if ((Lcell && !Lcellright) || (Lcelldown && !Lcelldiag && ny))  
+		{  // clamp the x position to avoid moving into the tile we just hit    
+			this.position.x = this.position.x +16;//tileToPixel(tx +1);         
+			this.velocity.x = 0;        // stop horizontal velocity   
+			this.health -= 1;
+		} 
+	}
 }
 
 

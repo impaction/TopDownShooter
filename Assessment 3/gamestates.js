@@ -318,7 +318,7 @@ function checkNextLv()
 	}
 }
 
-//spawnboss
+//spawnbosscheck
 function spawnBoss()
 {
 	var hasBossSpawned = false;
@@ -341,7 +341,7 @@ function gameCompleteText(deltaTime)
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
 	context.fillText("Game Complete! ", 240, 100);
-	context.fillText("Press 2 to Return to Title  ", 240, 200);
+	context.fillText("Press 3 to Return to Title  ", 240, 200);
 }
 
 // game complete
@@ -355,7 +355,7 @@ function runGameComplete(deltaTime)
 	
 	levelN = level1;		//reset level progress
 	
-	if(keyboard.isKeyDown(keyboard.KEY_2) == true) 
+	if(keyboard.isKeyDown(keyboard.KEY_3) == true) 
 	{
 		gameState = STATE_TITLE;
 		return;

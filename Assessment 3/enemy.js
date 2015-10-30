@@ -62,7 +62,7 @@ var Enemy = function(x, y)
 	
 // aggro player
 	this.agro = false;
-	this.shootcd = 3;
+	this.shootcd = .75;
 }
 
 Enemy.prototype.shoot = function(EbulX, EbulY, EbulVX, EbulVY)
