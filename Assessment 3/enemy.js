@@ -62,7 +62,7 @@ var Enemy = function(x, y)
 	
 // aggro player
 	this.agro = false;
-	this.shootcd = .75;
+	this.shootcd = 1;
 }
 
 Enemy.prototype.shoot = function(EbulX, EbulY, EbulVX, EbulVY)
@@ -377,13 +377,11 @@ Enemy.prototype.updateAgro = function(deltaTime)
 		this.shootcd = 3;
 	}	
 	
-	
 //update position and velocity		
 	this.velocity.x = ddx;     
 	this.velocity.y = ddy;
 	this.position.y = this.position.y + this.velocity.y * deltaTime;     
 	this.position.x = this.position.x + this.velocity.x * deltaTime;
-	
 		
 //collision detection
 	var tx = pixelToTile(this.position.x);  

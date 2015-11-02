@@ -83,7 +83,7 @@ Player.prototype.update = function(deltaTime)
 	}
 	
 //shoot bullet ,animation 
-	if(keyboard.isKeyDown(keyboard.KEY_1) == true && this.shootCooldownTimer <= 0) 
+	if(keyboard.isKeyDown(keyboard.KEY_NUMPAD_1) == true && this.shootCooldownTimer <= 0) 
 	{
 		//sfxFire.play();
 		this.shooting = true;
@@ -92,7 +92,7 @@ Player.prototype.update = function(deltaTime)
 	}
 	
 //throw grenade ,animation 
-	if(keyboard.isKeyDown(keyboard.KEY_2) == true && this.throwCoolDownTimer <= 0)
+	if(keyboard.isKeyDown(keyboard.KEY_NUMPAD_2) == true && this.throwCoolDownTimer <= 0)
 	{
 		//sfxFire.play();
 		this.throwing = true;

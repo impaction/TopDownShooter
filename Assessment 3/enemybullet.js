@@ -9,23 +9,18 @@ var Ebullet = function(EbulX, EbulY, EbulVX, EbulVY)
 	this.position = new Vector2();
 	this.position.set(EbulX, EbulY);
 	this.velocity = new Vector2();
-	this.velocity.set(EbulVX * 2, EbulVY *2);
+	this.velocity.set(EbulVX * 1.75, EbulVY *1.75);
 }
 
 var hit = false;
-
 for(var i=0; i<ebullets.length; i++)
 {
 	ebullets[i].update(deltaTime);
 }
-
-
 	
 Ebullet.prototype.update = function(deltaTime) 
 {
 	this.sprite.update(deltaTime);
-	
-	
 	
 	this.position.x = this.position.x  +  this.velocity.x * deltaTime;
 	this.position.y = this.position.y  +  this.velocity.y * deltaTime;

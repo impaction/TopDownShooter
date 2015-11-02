@@ -25,14 +25,11 @@ var Bullet = function()
 }
 
 var hit = false;
-
 for(var i=0; i<bullets.length; i++)
 {
 	bullets[i].update(deltaTime);
 }
 
-
-	
 Bullet.prototype.update = function(deltaTime) 
 {
 	this.sprite.update(deltaTime);

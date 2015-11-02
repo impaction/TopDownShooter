@@ -20,7 +20,6 @@ function titleText()
 	context.font="30px Arial";  
 	context.fillText("Start Game ENTER!",240, 100);
 }
-
 //title screen function
 function runTitle(deltaTime)
 {
@@ -224,7 +223,8 @@ function runGame(deltaTime)
 //hud	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
-	context.fillText("Playing Game 3 or 4 !",240, 100);
+	context.fillText("Playing Game num1 shoot num2 grenade",240, 100);
+	context.fillText("3 level skip 4 instant death",240, 150)
 	
 	if(keyboard.isKeyDown(keyboard.KEY_3) == true) 
 	{
@@ -256,7 +256,6 @@ function lvCompText(deltaTime)
 	context.fillText("level Complete!  ", 240, 100);
 	context.fillText("Press ENTER !",240, 200);
 }
-
 //level complete splash
 function runLvComp(deltaTime)
 {
@@ -343,7 +342,6 @@ function gameCompleteText(deltaTime)
 	context.fillText("Game Complete! ", 240, 100);
 	context.fillText("Press 3 to Return to Title  ", 240, 200);
 }
-
 // game complete
 function runGameComplete(deltaTime)
 {
@@ -371,7 +369,6 @@ function gameOverText(deltaTime)
 	context.font="30px Arial";  
 	context.fillText("Game Over!  "+ gameOverTimer, 240, 100);
 }
-
 // game over splash
 function runGameOver(deltaTime)
 {

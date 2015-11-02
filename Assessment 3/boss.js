@@ -63,7 +63,7 @@ var Boss = function()
 	
 //default stats
 	this.health = 50;
-	this.shootcd = 1.5;
+	this.shootcd = .5;
 }
 
 Boss.prototype.spawn = function()
@@ -388,7 +388,6 @@ Boss.prototype.updateAgro = function(deltaTime)
 	this.position.y = this.position.y + this.velocity.y * deltaTime;     
 	this.position.x = this.position.x + this.velocity.x * deltaTime;
 	
-		
 //collision detection
 	var tx = pixelToTile(this.position.x);  
 	var ty = pixelToTile(this.position.y);  
