@@ -13,6 +13,8 @@ var Bullet = function()
 	this.speed = 400;
 	this.rotation = player.rotation;
 	
+	this.timer = 3;
+	
 	var velX = 0;
 	var velY = -1;
 // now rotate this vector acording to the players current rotation
@@ -34,6 +36,12 @@ Bullet.prototype.update = function(deltaTime)
 {
 	this.sprite.update(deltaTime);
 	
+	if (this.timer >=0)
+	{
+		this.timer -= deltaTime;
+	}
+		
+		
 	this.position.x = this.position.x  +  this.velocity.x * deltaTime;
 	this.position.y = this.position.y  +  this.velocity.y * deltaTime;
 }

@@ -87,7 +87,7 @@ Player.prototype.update = function(deltaTime)
 	{
 		//sfxFire.play();
 		this.shooting = true;
-		this.shootCooldownTimer += .3;
+		this.shootCooldownTimer += .4;
 		this.shoot();
 	}
 	
@@ -220,7 +220,7 @@ Player.prototype.update = function(deltaTime)
 	{  
 		if ((Lcelldown && !Lcell) || (Lcelldiag && !Lcellright && nx))  
 		{   // clamp the y position to avoid moving into the tile we just hit      
-			this.position.y = this.position.y - 16; //tileToPixel(ty);            
+			this.position.y = this.position.y - 8; //tileToPixel(ty);            
 			this.velocity.y = 0;              // stop downward velocity         
 			ny = 0;                           // no longer overlaps the cells below
 			this.health -= 1;
@@ -230,7 +230,7 @@ Player.prototype.update = function(deltaTime)
 	{  
 		if ((Lcell && !Lcelldown) || (Lcellright && !Lcelldiag && nx))  
 		{   // clamp the y position to avoid moving into the tile we just hit      
-			this.position.y = this.position.y +16; //tileToPixel(ty +1);          
+			this.position.y = this.position.y +8; //tileToPixel(ty +1);          
 			this.velocity.y = 0;             // stop upward velocity     
 // player is no longer really in that cell, we clamped them to the cell below       
 			Lcell = Lcelldown;                         
@@ -244,7 +244,7 @@ Player.prototype.update = function(deltaTime)
 	{       
 		if ((Lcellright && !Lcell) || (Lcelldiag  && !Lcelldown && ny))  
 		{  // clamp the x position to avoid moving into the tile we just hit       
-			this.position.x = this.position.x -16; //tileToPixel(tx);         
+			this.position.x = this.position.x -8; //tileToPixel(tx);         
 			this.velocity.x = 0;      // stop horizontal velocity 
 			this.health -= 1;
 		}  
@@ -253,7 +253,7 @@ Player.prototype.update = function(deltaTime)
 	{         
 		if ((Lcell && !Lcellright) || (Lcelldown && !Lcelldiag && ny))  
 		{  // clamp the x position to avoid moving into the tile we just hit    
-			this.position.x = this.position.x +16;//tileToPixel(tx +1);         
+			this.position.x = this.position.x +8;//tileToPixel(tx +1);         
 			this.velocity.x = 0;        // stop horizontal velocity   
 			this.health -= 1;
 		} 

@@ -6,9 +6,9 @@ var Explosion = function(posX, posY)
 //320 wide 4
 //240 hi   5
 	this.sprite = new Sprite("explosion.png");
-	this.sprite.buildAnimation(4, 5, 320, 240, .075,
+	this.sprite.buildAnimation(4, 5, 640, 480, .075,
 	[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18]);
-	this.sprite.setAnimationOffset(i, -160, -120);
+	this.sprite.setAnimationOffset(i, -320, -240);
 	this.sprite.setLoop(0, false);
 	
 	this.sprite.setAnimation(ANIM_EXPLODE);
@@ -56,6 +56,7 @@ Explosion.prototype.draw = function()
 {
 	context.save();
 	context.translate(this.position.x- worldOffsetX, this.position.y - worldOffsetY);
+	context.rotate(this.rotation);
 	this.sprite.draw(context, 0,0);		
 	context.restore(); 
 }

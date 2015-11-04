@@ -214,7 +214,7 @@ function drawMap(level)
 	worldOffsetY = startY * TILE + offsetY; 
 	
 	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
-	{
+	{		
 		for( var y = 0; y < level.layers[layerIdx].height;  y++ ) 
 		{
 			

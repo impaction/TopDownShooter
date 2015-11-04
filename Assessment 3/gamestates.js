@@ -56,19 +56,32 @@ function runGame(deltaTime)
 	{
 		bosses[i].update(deltaTime);		
 	}
+
 //update draw enemy
 	for(var i=0; i<enemies.length; i++)
 	{
 		enemies[i].update(deltaTime);	
 	}
+
 //update draw enemy bullets
 	for(var i=0; i<ebullets.length; i++)
 	{
 		ebullets[i].update(deltaTime);
 		ebullets[i].draw(deltaTime);
-		
+				
+//splice var			
 		var ebhit= false;
+//timer		
+		if (ebullets[i].timer >= 0)
+		{
+			ebullets[i].timer -= deltaTime;
+		}
 		
+		if (ebullets[i].timer <= 0)
+		{
+			var ebhit = true;
+		}
+//player collision		
 		if(intersects(ebullets[i].position.x, ebullets[i].position.y, TILE, TILE,
 			player.position.x, player.position.y, TILE, TILE) == true)
 			{
@@ -76,29 +89,38 @@ function runGame(deltaTime)
 				player.health -= 5;
 				ebullets.splice(i, 1);
 				break;
-			}
-		
+			}		
 //kill ouside of screen		
 		if (ebullets[i].position.x <= -1 || ebullets[i].position.y <= -1 || 
 		ebullets[i].position.x > 3200 || ebullets[i].position.y > 3200)
 		{
 			ebhit = true;
 		}
-		
+//splice		
 		if (ebhit == true) 
 		{
 			ebullets.splice(i, 1);
 			break;
 		}
 	}	
-	
+
 //update draw bullets
 	for(var i=0; i<bullets.length; i++)
 	{
 		bullets[i].update(deltaTime);
 		bullets[i].draw(deltaTime);
-		
+//splice var			
 		var bhit= false
+//timer		
+		if (bullets[i].timer >= 0)
+		{
+			bullets[i].timer -= deltaTime;
+		}
+		
+		if (bullets[i].timer <= 0)
+		{
+			var bhit = true;
+		}
 //boss collision
 		for(var j=0; j<bosses.length; j++)
 		{
@@ -110,8 +132,7 @@ function runGame(deltaTime)
 				bhit = true;
 				break;
 			}
-		}		
-		
+		}			
 //enemy collision	
 		for(var j=0; j<enemies.length; j++)
 		{
@@ -135,7 +156,7 @@ function runGame(deltaTime)
 		{
 			bhit = true;
 		}
-		
+//splice		
 		if (bhit == true) 
 		{
 			bullets.splice(i, 1);
@@ -159,7 +180,7 @@ function runGame(deltaTime)
 		if (grenades[i].timer <= 0)
 		{
 			ghit = true;
-		}
+		}	
 //enemies collision		
 		for(var j=0; j<enemies.length; j++)
 		{
@@ -177,7 +198,6 @@ function runGame(deltaTime)
 			{// kill the boss hp
 				bosses[j].health -= 10;
 				ghit = true;
-	
 			}
 		}
 //off screen		

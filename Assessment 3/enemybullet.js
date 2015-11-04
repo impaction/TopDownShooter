@@ -10,6 +10,8 @@ var Ebullet = function(EbulX, EbulY, EbulVX, EbulVY)
 	this.position.set(EbulX, EbulY);
 	this.velocity = new Vector2();
 	this.velocity.set(EbulVX * 1.75, EbulVY *1.75);
+	
+	this.timer = 3.5;
 }
 
 var hit = false;

@@ -19,8 +19,10 @@
 	this.KEY_W = 87;
 	this.KEY_A = 65;  
 	this.KEY_D = 68;  
-	this.KEY_S = 83;  
-	  
+	this.KEY_S = 83; 
+	this.KEY_Q = 81; 
+	this.KEY_E = 69;  
+	
 	this.KEY_1 = 49;
 	this.KEY_2 = 50;
 	this.KEY_3 = 51;
