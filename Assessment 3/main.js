@@ -44,8 +44,11 @@ tileset.src = "All Tiles .png"
 var LAYER_FLOOR = 0; 
 var LAYER_WALLS = 1;
 var LAYER_LAVA = 2;
-var LAYER_COUNT = 3;
 var LAYER_OBJECT_ENEMY= 3;
+var LAYER_COUNT = 3;
+
+var LAYER_CLOUD = 4;
+
 
 var MAP = { tw: 50, th: 50 }; 
 //Specifies how big your level is, in tiles. 
@@ -59,7 +62,7 @@ var TILESET_PADDING = 0;
 //How many pixels are between the image border and the tile images in the tilemap 
 var TILESET_SPACING = 0; 
 //how many pixels are between tile images in the tilemap 
-var TILESET_COUNT_X = 12; 
+var TILESET_COUNT_X = 20; 
 //How many columns of tile images are in the tileset 
 var TILESET_COUNT_Y = 6; 
 //How many rows of tile images are in the tileset
@@ -172,7 +175,7 @@ function bound(value, min, max)
 
 var worldOffsetX = 1;
 var worldOffsetY = 1;
-function drawMap(level) 
+function drawMap(levelN) 
 { 
 	var startX = -1;
 	var startY = -1;
@@ -215,18 +218,17 @@ function drawMap(level)
 	
 	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
 	{		
-		for( var y = 0; y < level.layers[layerIdx].height;  y++ ) 
+		for( var y = 0; y < levelN.layers[layerIdx].height;  y++ ) 
 		{
-			
-			var idx = y * level.layers[layerIdx].width + startX;
+			var idx = y * levelN.layers[layerIdx].width + startX;
 			
 			for( var x = startX; x < startX + maxTilesX;  x++ ) 
 			{
-				if( level.layers[layerIdx].data[idx] != 0 )
+				if( levelN.layers[layerIdx].data[idx] != 0 )
 				{
 // the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
 //so subtract one from the tilesetid to get the correct tile
-					var tileIndex = level.layers[layerIdx].data[idx] - 1;
+					var tileIndex = levelN.layers[layerIdx].data[idx] - 1;
 					var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * 
 						(TILESET_TILE + TILESET_SPACING);
 					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) *
@@ -237,6 +239,74 @@ function drawMap(level)
 				idx++;
 			}
 		}
+	}
+}
+
+function drawClouds(levelN) 
+{ 
+	var startX = -1;
+	var startY = -1;
+	var maxTilesX = Math.floor(SCREEN_WIDTH / TILE) + 2;
+	var maxTilesY = Math.floor(SCREEN_HEIGHT / TILE) + 2;
+	var tileX = pixelToTile(player.position.x);
+	var tileY = pixelToTile(player.position.y);
+	var offsetX = TILE + Math.floor(player.position.x%TILE);
+	var offsetY = TILE + Math.floor(player.position.y%TILE);
+	
+	startX = tileX - Math.floor(maxTilesX / 2);
+	startY = tileY - Math.floor(maxTilesY / 2);
+	
+	if(startX <= -2) 
+	{
+		startX = 0;
+		offsetX = 0;
+	}
+	
+	if(startY <= -3) 
+	{
+		startY = -1;
+		offsetY = -1;
+	}
+	
+	if(startX > (MAP.tw - maxTilesX ))
+	{
+		startX = MAP.tw - maxTilesX + 1;
+		offsetX = TILE;
+	}
+	
+	if(startY > (MAP.th - maxTilesY - 1))
+	{
+		startY = MAP.th - maxTilesY;
+		offsetY = TILE;
+	}
+	
+	worldOffsetX = startX * TILE + offsetX;
+	worldOffsetY = startY * TILE + offsetY; 
+	
+	for( var layerIdx= 4; layerIdx <= LAYER_CLOUD; layerIdx++ )
+	{
+		for( var y = 0; y < levelN.layers[layerIdx].height;  y++ ) 
+		{
+			var idx = y * levelN.layers[layerIdx].width + startX;
+		
+			for( var x = startX; x < startX + maxTilesX;  x++ ) 
+			{
+				if( levelN.layers[layerIdx].data[idx] != 0 )
+				{
+// the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
+//so subtract one from the tilesetid to get the correct tile
+				var tileIndex = levelN.layers[layerIdx].data[idx] - 1;
+				var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * 
+					(TILESET_TILE + TILESET_SPACING);
+				var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) *
+					(TILESET_TILE + TILESET_SPACING);
+				context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, 
+				(x-startX)*TILE - offsetX, (y -1)*TILE - worldOffsetY, TILESET_TILE, TILESET_TILE);
+				}
+			idx++;
+			}
+		}
+		
 	}
 }
 

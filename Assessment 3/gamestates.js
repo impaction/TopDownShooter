@@ -240,6 +240,7 @@ function runGame(deltaTime)
 		}
 	}
 
+	drawClouds(levelN);
 //hud	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
