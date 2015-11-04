@@ -1,52 +1,23 @@
-//boss animation variables
-var B_ANIM_WALK_DOWN = 0;
-var B_ANIM_WALK_RIGHT = 1;
-var B_ANIM_WALK_LEFT = 2;
-var B_ANIM_WALK_UP = 3;
-var B_ANIM_BITE_DOWN = 4;
-var B_ANIM_BITE_RIGHT = 5;
-var B_ANIM_BITE_LEFT = 6
-var B_ANIM_BITE_UP = 7;
-var B_ANIM_DEATH = 8;
+//Boss animation variables
+var ANIM_WALKING = 0;
+var ANIM_IDLE = 1;
+var ANIM_MAX = 2;
 
-var B_ANIM_MAX = 9;
-
-var Boss = function() 
+var Boss1 = function(x, y) 
 {  
-	this.sprite = new Sprite("zombieEnemy.png");
-//walk down
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[0,1,2,3,4,5,6]);
-//walk right
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[7,8,9,10,11,12,13]);
-//walk left
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[14,15,16,17,18,19,20]);
-//walk up
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[21,22,23,24,25,26,27]);
-//bite down
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
-	[28,29,30,31]);
-//bite right
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
-	[32,33,34,35]);
-//bite left
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
-	[36,37,38,39]);
-//bite up
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
-	[40,41,42,43]);
-//death
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[44,,45,46,47,48,49,50,51,52]);
+	this.sprite = new Sprite("soldier.png");
+ 
+	this.sprite.buildAnimation(5, 3, 151, 151, 0.2,  //walking
+	[6, 7, 8, 7]);
+	this.sprite.buildAnimation(3, 1, 151, 151, 0.2,  // idle
+	[7]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
 		this.sprite.setAnimationOffset(i, 0, 0);								
 	}
-	
+	this.sprite.setAnimation(ANIM_IDLE);
+
 	this.position = new Vector2();
 	this.position.set(45*TILE, 5*TILE);
 	this.velocity = new Vector2();
@@ -66,19 +37,19 @@ var Boss = function()
 	this.shootcd = .5;
 }
 
-Boss.prototype.spawn = function()
+Boss1.prototype.spawn = function()
 {
 	var boss = new Boss(); 
 	bosses.push(boss);
 }
 
-Enemy.prototype.shoot = function(EbulX, EbulY, EbulVX, EbulVY)
+Boss1.prototype.shoot = function(EbulX, EbulY, EbulVX, EbulVY)
 {
 	var ebullet = new Ebullet(EbulX, EbulY, EbulVX, EbulVY); 
 	ebullets.push(ebullet);
 }
 
-Boss.prototype.randomDirection = function()
+Boss1.prototype.randomDirection = function()
 {
 	this.moveUp = false;
 	this.moveDown = false
@@ -106,7 +77,7 @@ Boss.prototype.randomDirection = function()
 	}
 }
 
-Boss.prototype.distanceToPlayer = function(x1,y1,x2,y2)
+Boss1.prototype.distanceToPlayer = function(x1,y1,x2,y2)
 {
 	x3 = x1 - x2;
 	y3 = y1 - y2;
@@ -114,7 +85,15 @@ Boss.prototype.distanceToPlayer = function(x1,y1,x2,y2)
 	this.distanceOfPlayer = Math.sqrt(x3 * x3 + y3 * y3);
 }
 
-Boss.prototype.updateWonder = function(deltaTime) 
+Boss1.prototype.targetPlayer = function(x1, y1, x2, y2)
+{ 
+	x3 = x1 - x2;
+	y3 = y1 - y2;
+	
+	this.rotation = Math.atan2 (y3, x3);
+}
+
+Boss1.prototype.updateWonder = function(deltaTime) 
 {
 	this.sprite.update(deltaTime);
 //random direction on a timer
@@ -124,6 +103,7 @@ Boss.prototype.updateWonder = function(deltaTime)
 		this.randomDirection();
 		this.randomDirectionTimer = Math.floor((Math.random() * 4) + .5);	// max, min random time
 	}
+	
 //randomly pause every so often 	
 	this.pauseTimer -= deltaTime;
 	if (this.pauseTimer <= 0)
@@ -131,6 +111,7 @@ Boss.prototype.updateWonder = function(deltaTime)
 		this.pause = Math.floor((Math.random() * 2) + .5); 				// max, min random time
 		this.pauseTimer = Math.floor((Math.random() * 3) + 1); ;		// max, min random time
 	}
+	
 //randomly pause length of time	
 	this.pause -= deltaTime;
 	if (this.pause <= 0)
@@ -145,40 +126,41 @@ Boss.prototype.updateWonder = function(deltaTime)
 // if moving		
 	if(this.moveUp == true)
 	{
-		if (this.sprite.currentAnimation != E_ANIM_WALK_UP)
-		{
-			this.sprite.setAnimation(E_ANIM_WALK_UP);
-		}
-		ddy = ddy - this.speed;    // enemy wants to go up
+		this.rotation = 0;
+		ddy = ddy - speed;    // enemy wants to go up 
 	}
 	
 	if(this.moveRight == true)
 	{
-		if (this.sprite.currentAnimation != E_ANIM_WALK_RIGHT)
-		{
-			this.sprite.setAnimation(E_ANIM_WALK_RIGHT);
-		}
-		ddx = ddx +  this.speed;   // enemy wants to go right
+		this.rotation = 1.5;
+		ddx = ddx + speed;   // enemy wants to go right
 	}
 		
 	if(this.moveDown == true)
 	{
-		if (this.sprite.currentAnimation != E_ANIM_WALK_DOWN)
-		{
-			this.sprite.setAnimation(E_ANIM_WALK_DOWN);
-		}
-		ddy = ddy +  this.speed;    // enemy wants to go down
+		this.rotation = 3;
+		ddy = ddy + speed;    // enemy wants to go down
 	}
 		
 	if(this.moveLeft == true)
 	{
-		if (this.sprite.currentAnimation != E_ANIM_WALK_LEFT)
-		{
-			this.sprite.setAnimation(E_ANIM_WALK_LEFT);
-		}
-		ddx = ddx -  this.speed;   // enemy wants to go left
+		this.rotation = 4.5
+		ddx = ddx - speed;   // enemy wants to go left
 	}
-		
+	
+//walking animation
+	if (this.velocity.x > 1 || this.velocity.y > 1 || this.velocity.x < -1 || this.velocity.y < -1)
+	{
+		if (this.sprite.currentAnimation != ANIM_WALKING)
+		{
+			this.sprite.setAnimation(ANIM_WALKING);
+		}
+	}
+	else
+	{
+		this.sprite.setAnimation(ANIM_IDLE);
+	}
+	
 //update position and velocity		
 	this.velocity.x = ddx;     
 	this.velocity.y = ddy;
@@ -325,9 +307,11 @@ Boss.prototype.updateWonder = function(deltaTime)
 	}
 }
 
-Boss.prototype.updateAgro = function(deltaTime)
+Boss1.prototype.updateAgro = function(deltaTime)
 {
 	this.sprite.update(deltaTime);
+	
+//this.targetPlayer (this.position.x, this.position.y, player.position.x, player.position.y);	
 	
 //speeds acceleration		
 	var ddx = 0;
@@ -338,37 +322,21 @@ Boss.prototype.updateAgro = function(deltaTime)
 	if (this.position.y > player.position.y + 2)
 	{
 		ddy = - this.speed;
-		if (this.sprite.currentAnimation != E_ANIM_BITE_UP)
-		{
-			this.sprite.setAnimation(E_ANIM_BITE_UP);
-		}
 	}
 //down	
 	if (this.position.y < player.position.y - 2)
 	{
 		ddy = this.speed;
-		if (this.sprite.currentAnimation != E_ANIM_BITE_DOWN)
-		{
-			this.sprite.setAnimation(E_ANIM_BITE_DOWN);
-		}
 	}
 //left
 	if (this.position.x > player.position.x + 2)
 	{
 		ddx = - this.speed;
-		if (this.sprite.currentAnimation != E_ANIM_BITE_LEFT)
-		{
-			this.sprite.setAnimation(E_ANIM_BITE_LEFT);
-		}
 	}
 //right	
 	if (this.position.x < player.position.x - 2)
 	{
 		ddx =  this.speed;
-		if (this.sprite.currentAnimation != E_ANIM_BITE_RIGHT)
-		{
-			this.sprite.setAnimation(E_ANIM_BITE_RIGHT);
-		}
 	}
 	
 	if (this.shootcd >=0)
@@ -381,6 +349,19 @@ Boss.prototype.updateAgro = function(deltaTime)
 		enemy.shoot(this.position.x, this.position.y, this.velocity.x, this.velocity.y);
 		this.shootcd = 1.25;
 	}	
+	
+//walking animation
+	if (this.velocity.x > 1 || this.velocity.y > 1 || this.velocity.x < -1 || this.velocity.y < -1)
+	{
+		if (this.sprite.currentAnimation != ANIM_WALKING)
+		{
+			this.sprite.setAnimation(ANIM_WALKING);
+		}
+	}
+	else
+	{
+		this.sprite.setAnimation(ANIM_IDLE);
+	}
 
 //update position and velocity		
 	this.velocity.x = ddx;     
@@ -487,7 +468,7 @@ Boss.prototype.updateAgro = function(deltaTime)
 	}
 }
 
-Boss.prototype.update = function(deltaTime)
+Boss1.prototype.update = function(deltaTime)
 {
 	if (this.health <=0)
 	{
@@ -506,8 +487,11 @@ Boss.prototype.update = function(deltaTime)
 	this.draw();
 }
 
-Boss.prototype.draw = function()
+Boss1.prototype.draw = function()
 {
-	this.sprite.draw(context, this.position.x - worldOffsetX, 
-							  this.position.y - worldOffsetY);							  
+	context.save();
+	context.translate(this.position.x- worldOffsetX, this.position.y - worldOffsetY);
+	context.rotate(this.rotation);
+	this.sprite.draw(context, 0,0);		
+	context.restore(); 	
 }

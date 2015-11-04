@@ -38,17 +38,16 @@ var fpsTime = 0;
 
 // load the image to use for the level tiles
 var tileset = document.createElement("img"); 
-tileset.src = "All Tiles .png"
+tileset.src = "level sprite sheet.png"
 
 //level layers 
 var LAYER_FLOOR = 0; 
-var LAYER_WALLS = 1;
-var LAYER_LAVA = 2;
-var LAYER_OBJECT_ENEMY= 3;
-var LAYER_COUNT = 3;
-
-var LAYER_CLOUD = 4;
-
+var LAYER_LAVA = 1;
+var LAYER_WALLS = 2;
+var LAYER_TREES = 3;
+var LAYER_BUSHES = 4;
+var LAYER_OBJECT_ENEMY= 5;
+var LAYER_COUNT = 6;
 
 var MAP = { tw: 50, th: 50 }; 
 //Specifies how big your level is, in tiles. 
@@ -62,9 +61,9 @@ var TILESET_PADDING = 0;
 //How many pixels are between the image border and the tile images in the tilemap 
 var TILESET_SPACING = 0; 
 //how many pixels are between tile images in the tilemap 
-var TILESET_COUNT_X = 20; 
+var TILESET_COUNT_X = 24; 
 //How many columns of tile images are in the tileset 
-var TILESET_COUNT_Y = 6; 
+var TILESET_COUNT_Y = 20; 
 //How many rows of tile images are in the tileset
 
 //arrays
@@ -80,7 +79,8 @@ var keyboard = new Keyboard();
 var vector2 = new Vector2();
 var player = new Player();
 var enemy = new Enemy();
-var boss = new Boss();
+var boss1 = new Boss1();
+var boss2 = new Boss2();
 var bullet = new Bullet();
 var ebullet = new Ebullet();
 var grenade = new Grenade();
@@ -283,7 +283,7 @@ function drawClouds(levelN)
 	worldOffsetX = startX * TILE + offsetX;
 	worldOffsetY = startY * TILE + offsetY; 
 	
-	for( var layerIdx= 4; layerIdx <= LAYER_CLOUD; layerIdx++ )
+	for( var layerIdx= 3; layerIdx == LAYER_TREES; layerIdx++ )
 	{
 		for( var y = 0; y < levelN.layers[layerIdx].height;  y++ ) 
 		{

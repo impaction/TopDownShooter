@@ -40,8 +40,7 @@ Bullet.prototype.update = function(deltaTime)
 	{
 		this.timer -= deltaTime;
 	}
-		
-		
+
 	this.position.x = this.position.x  +  this.velocity.x * deltaTime;
 	this.position.y = this.position.y  +  this.velocity.y * deltaTime;
 }
@@ -51,6 +50,6 @@ Bullet.prototype.draw = function()
 	context.save();
 	context.translate(this.position.x- worldOffsetX, this.position.y - worldOffsetY);
 	context.rotate(this.rotation);
-	this.sprite.draw(context, 0,0);		
+	this.sprite.draw(context, 12,-100);		
 	context.restore(); 
 }

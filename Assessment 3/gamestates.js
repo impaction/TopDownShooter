@@ -43,7 +43,7 @@ function runTitle(deltaTime)
 function runGame(deltaTime)
 {
 	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
-	checkNextLv();
+	
 //update player 	
 	player.update(deltaTime);
 //draw map level
@@ -241,6 +241,7 @@ function runGame(deltaTime)
 	}
 
 	drawClouds(levelN);
+	checkNextLv();
 //hud	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
@@ -341,13 +342,32 @@ function checkNextLv()
 //spawnbosscheck
 function spawnBoss()
 {
-	var hasBossSpawned = false;
+	var hasBossSpawned1 = false;
+	if (levelN.level == 1)
+	{
+		if (hasBossSpawned1 == false)		
+		{
+			boss1.spawn( 1800, 1800);
+			hasBossSpawned = true;
+		}
+	}
 	
+	var hasBossSpawned2 = false;
+	if (levelN.level == 2)
+	{
+		if (hasBossSpawned2 == false)		
+		{
+			boss1.spawn(1800, 1800);
+			hasBossSpawned = true;
+		}
+	}
+	
+	var hasBossSpawned3 = false;
 	if (levelN.level == 3)
 	{
-		if (hasBossSpawned == false)		
+		if (hasBossSpawned3 == false)		
 		{
-			boss.spawn();
+			boss2.spawn(1100, 1500);
 			hasBossSpawned = true;
 		}
 	}

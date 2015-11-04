@@ -1,51 +1,22 @@
 //enemy animation variables
-var E_ANIM_WALK_DOWN = 0;
-var E_ANIM_WALK_RIGHT = 1;
-var E_ANIM_WALK_LEFT = 2;
-var E_ANIM_WALK_UP = 3;
-var E_ANIM_BITE_DOWN = 4;
-var E_ANIM_BITE_RIGHT = 5;
-var E_ANIM_BITE_LEFT = 6
-var E_ANIM_BITE_UP = 7;
-var E_ANIM_DEATH = 8;
-
-var E_ANIM_MAX = 9;
+var ANIM_WALKING = 0;
+var ANIM_IDLE = 1;
+var ANIM_MAX = 2;
 
 var Enemy = function(x, y) 
 {  
-	this.sprite = new Sprite("zombieEnemy.png");
-//walk down
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[0,1,2,3,4,5,6]);
-//walk right
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[7,8,9,10,11,12,13]);
-//walk left
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[14,15,16,17,18,19,20]);
-//walk up
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[21,22,23,24,25,26,27]);
-//bite down
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
-	[28,29,30,31]);
-//bite right
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
-	[32,33,34,35]);
-//bite left
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
-	[36,37,38,39]);
-//bite up
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.30,
-	[40,41,42,43]);
-//death
-	this.sprite.buildAnimation(7, 8, 64, 64, 0.15,
-	[44,,45,46,47,48,49,50,51,52]);
+	this.sprite = new Sprite("soldier.png");
+ 
+	this.sprite.buildAnimation(3, 3, 151, 151, 0.2,  //walking
+	[3, 4, 5, 4]);
+	this.sprite.buildAnimation(3, 3, 151, 151, 0.2,  // idle
+	[4]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
-		this.sprite.setAnimationOffset(i, 0, 0);								
+		this.sprite.setAnimationOffset(i, -75, -75);								
 	}
+	this.sprite.setAnimation(ANIM_IDLE);
 	
 	this.position = new Vector2();
 	this.position.set(x,y);
@@ -85,6 +56,10 @@ Enemy.prototype.randomDirection = function()
 	{
 		this.moveUp = true; //0
 	}
+	if (this.whichWay == 4)
+	{
+		this.moveRight = true; //1.5
+	}
 	if (this.whichWay == 2)
 	{
 		this.moveDown = true; //3
@@ -92,10 +67,6 @@ Enemy.prototype.randomDirection = function()
 	if (this.whichWay == 3)
 	{
 		this.moveLeft = true; //4.5
-	}
-	if (this.whichWay == 4)
-	{
-		this.moveRight = true; //1.5
 	}
 }
 
@@ -107,9 +78,18 @@ Enemy.prototype.distanceToPlayer = function(x1,y1,x2,y2)
 	this.distanceOfPlayer = Math.sqrt(x3 * x3 + y3 * y3);
 }
 
+Enemy.prototype.targetPlayer = function(x1, y1, x2, y2)
+{ 
+	x3 = x1 - x2;
+	y3 = y1 - y2;
+	
+	this.rotation = Math.atan2 (y3, x3) - Math.PI * 0.5;
+}
+
 Enemy.prototype.updateWonder = function(deltaTime) 
 {
 	this.sprite.update(deltaTime);
+	
 //random direction on a timer
 	this.randomDirectionTimer -= deltaTime;
 	if (this.randomDirectionTimer <= 0)
@@ -117,6 +97,7 @@ Enemy.prototype.updateWonder = function(deltaTime)
 		this.randomDirection();
 		this.randomDirectionTimer = Math.floor((Math.random() * 4) + .5);	// max, min random time
 	}
+	
 //randomly pause every so often 	
 	this.pauseTimer -= deltaTime;
 	if (this.pauseTimer <= 0)
@@ -124,6 +105,7 @@ Enemy.prototype.updateWonder = function(deltaTime)
 		this.pause = Math.floor((Math.random() * 2) + .5); 				// max, min random time
 		this.pauseTimer = Math.floor((Math.random() * 3) + 1); ;		// max, min random time
 	}
+	
 //randomly pause length of time	
 	this.pause -= deltaTime;
 	if (this.pause <= 0)
@@ -139,54 +121,55 @@ Enemy.prototype.updateWonder = function(deltaTime)
 // if moving		
 	if(this.moveUp == true)
 	{
-		if (this.sprite.currentAnimation != E_ANIM_WALK_UP)
-		{
-			this.sprite.setAnimation(E_ANIM_WALK_UP);
-		}
+		this.rotation = 0;
 		ddy = ddy - speed;    // enemy wants to go up 
 	}
 	
 	if(this.moveRight == true)
 	{
-		if (this.sprite.currentAnimation != E_ANIM_WALK_RIGHT)
-		{
-			this.sprite.setAnimation(E_ANIM_WALK_RIGHT);
-		}
+		this.rotation = 1.55;
 		ddx = ddx + speed;   // enemy wants to go right
 	}
 		
 	if(this.moveDown == true)
 	{
-		if (this.sprite.currentAnimation != E_ANIM_WALK_DOWN)
-		{
-			this.sprite.setAnimation(E_ANIM_WALK_DOWN);
-		}
+		this.rotation = 3.1;
 		ddy = ddy + speed;    // enemy wants to go down
 	}
 		
 	if(this.moveLeft == true)
 	{
-		if (this.sprite.currentAnimation != E_ANIM_WALK_LEFT)
-		{
-			this.sprite.setAnimation(E_ANIM_WALK_LEFT);
-		}
+		this.rotation = 4.65;
 		ddx = ddx - speed;   // enemy wants to go left
 	}
 	
-//update position and velocity		
-	this.velocity.x = ddx;     
-	this.velocity.y = ddy;
-	this.position.y = this.position.y + this.velocity.y * deltaTime;     
-	this.position.x = this.position.x + this.velocity.x * deltaTime;
-
+//walking animation
+	if (this.velocity.x > 2 || this.velocity.y > 2 || this.velocity.x < -2 || this.velocity.y < -2)
+	{
+		if (this.sprite.currentAnimation != ANIM_WALKING)
+		{
+			this.sprite.setAnimation(ANIM_WALKING);
+		}
+	}
+	else
+	{
+		this.sprite.setAnimation(ANIM_IDLE);
+	}
+	
 //pause
 	if (this.pause > 0)
 	{
 		this.moveUp = false;
 		this.moveDown = false
 		this.moveLeft = false;
-		this.moveRight = false;
-	}
+		this.moveRight = false;22
+	}	
+
+//update position and velocity		
+	this.velocity.x = ddx;     
+	this.velocity.y = ddy;
+	this.position.y = this.position.y + this.velocity.y * deltaTime;     
+	this.position.x = this.position.x + this.velocity.x * deltaTime;
 	
 //collision detection
 	var tx = pixelToTile(this.position.x);  
@@ -323,6 +306,8 @@ Enemy.prototype.updateAgro = function(deltaTime)
 {
 	this.sprite.update(deltaTime);
 	
+this.targetPlayer (this.position.x, this.position.y, player.position.x, player.position.y);	
+
 //speeds acceleration		
 	var speed = 100;
 	var ddx = 0;
@@ -333,37 +318,21 @@ Enemy.prototype.updateAgro = function(deltaTime)
 	if (this.position.y > player.position.y + 2)
 	{
 		ddy = -speed;
-		if (this.sprite.currentAnimation != E_ANIM_BITE_UP)
-		{
-			this.sprite.setAnimation(E_ANIM_BITE_UP);
-		}
 	}
 //down	
 	if (this.position.y < player.position.y - 2)
 	{
 		ddy = speed;
-		if (this.sprite.currentAnimation != E_ANIM_BITE_DOWN)
-		{
-			this.sprite.setAnimation(E_ANIM_BITE_DOWN);
-		}
 	}
 //left
 	if (this.position.x > player.position.x + 2)
 	{
 		ddx = -speed;
-		if (this.sprite.currentAnimation != E_ANIM_BITE_LEFT)
-		{
-			this.sprite.setAnimation(E_ANIM_BITE_LEFT);
-		}
 	}
 //right	
 	if (this.position.x < player.position.x - 2)
 	{
 		ddx = speed;
-		if (this.sprite.currentAnimation != E_ANIM_BITE_RIGHT)
-		{
-			this.sprite.setAnimation(E_ANIM_BITE_RIGHT);
-		}
 	}
 	
 	if (this.shootcd >=0)
@@ -374,8 +343,21 @@ Enemy.prototype.updateAgro = function(deltaTime)
 	if (this.shootcd <= 0)
 	{
 		this.shoot(this.position.x, this.position.y, this.velocity.x, this.velocity.y);
-		this.shootcd = 3;
+		this.shootcd = 1;
 	}	
+	
+//walking animation
+	if (this.velocity.x > 3 || this.velocity.y > 3 || this.velocity.x < -3 || this.velocity.y < -3)
+	{
+		if (this.sprite.currentAnimation != ANIM_WALKING)
+		{
+			this.sprite.setAnimation(ANIM_WALKING);
+		}
+	}
+	else
+	{
+		this.sprite.setAnimation(ANIM_IDLE);
+	}
 	
 //update position and velocity		
 	this.velocity.x = ddx;     
@@ -498,6 +480,9 @@ Enemy.prototype.update = function(deltaTime)
 
 Enemy.prototype.draw = function()
 {
-	this.sprite.draw(context, this.position.x - worldOffsetX, 
-							  this.position.y - worldOffsetY);							  
+	context.save();
+	context.translate(this.position.x- worldOffsetX, this.position.y - worldOffsetY);
+	context.rotate(this.rotation);
+	this.sprite.draw(context, 0,0);		
+	context.restore(); 						  
 }
