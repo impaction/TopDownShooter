@@ -390,13 +390,8 @@ function spawnBoss()
 	{
 		if (hasBossSpawned1 == false)		
 		{
-<<<<<<< HEAD
 			boss1.spawn(1600, 1600);
 			hasBossSpawned1 = true;
-=======
-			boss1.spawn( 1800, 1800);
-			hasBossSpawned = true;
->>>>>>> origin/master
 		}
 	}
 	
@@ -405,13 +400,8 @@ function spawnBoss()
 	{
 		if (hasBossSpawned2 == false)		
 		{
-<<<<<<< HEAD
 			boss1.spawn(1500, 450);
 			hasBossSpawned2 = true;
-=======
-			boss1.spawn(1800, 1800);
-			hasBossSpawned = true;
->>>>>>> origin/master
 		}
 	}
 	
@@ -420,13 +410,8 @@ function spawnBoss()
 	{
 		if (hasBossSpawned3 == false)		
 		{
-<<<<<<< HEAD
 			boss2.spawn(1200, 1500);
 			hasBossSpawned3 = true;
-=======
-			boss2.spawn(1100, 1500);
-			hasBossSpawned = true;
->>>>>>> origin/master
 		}
 	}
 }

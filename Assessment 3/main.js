@@ -42,7 +42,6 @@ tileset.src = "level sprite sheet.png"
 
 //level layers 
 var LAYER_FLOOR = 0; 
-<<<<<<< HEAD
 var LAYER_WALLS = 1;
 var LAYER_LAVA = 2;
 var LAYER_TREES = 3;
@@ -50,14 +49,6 @@ var LAYER_BUSHES = 4;
 var LAYER_COUNT = 4;
 var LAYER_OBJECT_ENEMY= 5;
 
-=======
-var LAYER_LAVA = 1;
-var LAYER_WALLS = 2;
-var LAYER_TREES = 3;
-var LAYER_BUSHES = 4;
-var LAYER_OBJECT_ENEMY= 5;
-var LAYER_COUNT = 6;
->>>>>>> origin/master
 
 var MAP = { tw: 50, th: 50 }; 
 //Specifies how big your level is, in tiles. 

@@ -1,37 +1,21 @@
 //Boss animation variables
 var ANIM_IDLE = 0;
 var ANIM_MAX = 1;
-<<<<<<< HEAD
 var Boss2 = function(b2x, b2y) 
 {  
 	this.sprite = new Sprite("TigerTank.png");
  
 	this.sprite.buildAnimation(1, 1, 269, 580, -1,  //walking
-=======
-var Boss2 = function(x, y) 
-{  
-	this.sprite = new Sprite("TigerTank.png");
- 
-	this.sprite.buildAnimation(1, 1, 580, 269, -1,  //walking
->>>>>>> origin/master
 	[0]);
 	
 	for(var i=0; i<ANIM_MAX; i++)
 	{
-<<<<<<< HEAD
 		this.sprite.setAnimationOffset(i, -130, -290);								
-=======
-		this.sprite.setAnimationOffset(i, 0, 0);								
->>>>>>> origin/master
 	}
 	this.sprite.setAnimation(ANIM_IDLE);
 
 	this.position = new Vector2();
-<<<<<<< HEAD
 	this.position.set(b2x, b2y);
-=======
-	this.position.set(1100, 1500);
->>>>>>> origin/master
 	this.velocity = new Vector2();
 	this.rotation = 0;
 	this.speed = 50;
@@ -46,7 +30,6 @@ var Boss2 = function(x, y)
 	this.agro = false;
 	
 //default stats
-<<<<<<< HEAD
 	this.health = 500;
 	this.shootcd = .75;
 }
@@ -61,22 +44,6 @@ Boss2.prototype.shoot = function(Ebul2X, Ebul2Y, Ebul2r)
 {
 	var ebullet2 = new Ebullet2(Ebul2X, Ebul2Y, Ebul2r); 
 	ebullets2.push(ebullet2);
-=======
-	this.health = 250;
-	this.shootcd = .5;
-}
-
-Boss2.prototype.spawn = function()
-{
-	var boss = new Boss2(); 
-	bosses.push(boss2);
-}
-
-Boss2.prototype.shoot = function(EbulX, EbulY, EbulVX, EbulVY)
-{
-	var ebullet = new Ebullet(EbulX, EbulY, EbulVX, EbulVY); 
-	ebullets.push(ebullet);
->>>>>>> origin/master
 }
 
 Boss2.prototype.randomDirection = function()
@@ -120,11 +87,7 @@ Boss2.prototype.targetPlayer = function(x1, y1, x2, y2)
 	x3 = x1 - x2;
 	y3 = y1 - y2;
 	
-<<<<<<< HEAD
 	this.rotation = Math.atan2 (y3, x3) - Math.PI * 0.5;
-=======
-	this.rotation = Math.atan2 (y3, x3);
->>>>>>> origin/master
 }
 
 Boss2.prototype.updateWonder = function(deltaTime) 
@@ -332,11 +295,7 @@ Boss2.prototype.updateAgro = function(deltaTime)
 {
 	this.sprite.update(deltaTime);
 	
-<<<<<<< HEAD
 this.targetPlayer (this.position.x, this.position.y, player.position.x, player.position.y);	
-=======
-//this.targetPlayer (this.position.x, this.position.y, player.position.x, player.position.y);	
->>>>>>> origin/master
 	
 //speeds acceleration		
 	var ddx = 0;
@@ -344,38 +303,22 @@ this.targetPlayer (this.position.x, this.position.y, player.position.x, player.p
 	
 // go toward player	
 //up
-<<<<<<< HEAD
 	if (this.position.y > player.position.y + 288)
-=======
-	if (this.position.y > player.position.y + 2)
->>>>>>> origin/master
 	{
 		ddy = - this.speed;
 	}
 //down	
-<<<<<<< HEAD
 	if (this.position.y < player.position.y - 288)
-=======
-	if (this.position.y < player.position.y - 2)
->>>>>>> origin/master
 	{
 		ddy = this.speed;
 	}
 //left
-<<<<<<< HEAD
 	if (this.position.x > player.position.x + 288)
-=======
-	if (this.position.x > player.position.x + 2)
->>>>>>> origin/master
 	{
 		ddx = - this.speed;
 	}
 //right	
-<<<<<<< HEAD
 	if (this.position.x < player.position.x - 288)
-=======
-	if (this.position.x < player.position.x - 2)
->>>>>>> origin/master
 	{
 		ddx =  this.speed;
 	}
@@ -387,28 +330,9 @@ this.targetPlayer (this.position.x, this.position.y, player.position.x, player.p
 	
 	if (this.shootcd <= 0)
 	{
-<<<<<<< HEAD
 		this.shoot(this.position.x, this.position.y, this.rotation);
 		this.shootcd = .75;
 	}	
-=======
-		enemy.shoot(this.position.x, this.position.y, this.velocity.x, this.velocity.y);
-		this.shootcd = .75;
-	}	
-	
-//walking animation
-	if (this.velocity.x > 1 || this.velocity.y > 1 || this.velocity.x < -1 || this.velocity.y < -1)
-	{
-		if (this.sprite.currentAnimation != ANIM_WALKING)
-		{
-			this.sprite.setAnimation(ANIM_WALKING);
-		}
-	}
-	else
-	{
-		this.sprite.setAnimation(ANIM_IDLE);
-	}
->>>>>>> origin/master
 
 //update position and velocity		
 	this.velocity.x = ddx;     

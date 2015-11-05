@@ -3,19 +3,11 @@ var ANIM_WALKING = 0;
 var ANIM_IDLE = 1;
 var ANIM_MAX = 2;
 
-<<<<<<< HEAD:Assessment 3/boss1.js
 var Boss1 = function(b1x, b1y) 
 {  
 	this.sprite = new Sprite("soldier.png");
  
 	this.sprite.buildAnimation(3, 3, 151, 151, 0.2,  //walking
-=======
-var Boss1 = function(x, y) 
-{  
-	this.sprite = new Sprite("soldier.png");
- 
-	this.sprite.buildAnimation(5, 3, 151, 151, 0.2,  //walking
->>>>>>> origin/master:Assessment 3/boss.js
 	[6, 7, 8, 7]);
 	this.sprite.buildAnimation(3, 1, 151, 151, 0.2,  // idle
 	[7]);
@@ -46,21 +38,13 @@ var Boss1 = function(x, y)
 	this.shootcd = 1.25;
 }
 
-<<<<<<< HEAD:Assessment 3/boss1.js
 Boss1.prototype.spawn = function(b1x, b1y)
-=======
-Boss1.prototype.spawn = function()
->>>>>>> origin/master:Assessment 3/boss.js
 {
 	var boss1 = new Boss1(b1x, b1y); 
 	bosses.push(boss1);
 }
 
-<<<<<<< HEAD:Assessment 3/boss1.js
 Boss1.prototype.shoot = function(EbulX, EbulY, Ebulr)
-=======
-Boss1.prototype.shoot = function(EbulX, EbulY, EbulVX, EbulVY)
->>>>>>> origin/master:Assessment 3/boss.js
 {
 	var ebullet = new Ebullet(EbulX, EbulY, this.rotation); 
 	ebullets.push(ebullet);
@@ -107,11 +91,7 @@ Boss1.prototype.targetPlayer = function(x1, y1, x2, y2)
 	x3 = x1 - x2;
 	y3 = y1 - y2;
 	
-<<<<<<< HEAD:Assessment 3/boss1.js
 	this.rotation = Math.atan2 (y3, x3) - Math.PI * 0.5;
-=======
-	this.rotation = Math.atan2 (y3, x3);
->>>>>>> origin/master:Assessment 3/boss.js
 }
 
 Boss1.prototype.updateWonder = function(deltaTime) 
@@ -148,44 +128,25 @@ Boss1.prototype.updateWonder = function(deltaTime)
 	if(this.moveUp == true)
 	{
 		this.rotation = 0;
-<<<<<<< HEAD:Assessment 3/boss1.js
 		ddy = ddy - this.speed;    // enemy wants to go up 
-=======
-		ddy = ddy - speed;    // enemy wants to go up 
->>>>>>> origin/master:Assessment 3/boss.js
 	}
 	
 	if(this.moveRight == true)
 	{
-<<<<<<< HEAD:Assessment 3/boss1.js
 		this.rotation = 1.55;
 		ddx = ddx + this.speed;   // enemy wants to go right
-=======
-		this.rotation = 1.5;
-		ddx = ddx + speed;   // enemy wants to go right
->>>>>>> origin/master:Assessment 3/boss.js
 	}
 		
 	if(this.moveDown == true)
 	{
-<<<<<<< HEAD:Assessment 3/boss1.js
 		this.rotation = 3.1;
 		ddy = ddy + this.speed;    // enemy wants to go down
-=======
-		this.rotation = 3;
-		ddy = ddy + speed;    // enemy wants to go down
->>>>>>> origin/master:Assessment 3/boss.js
 	}
 		
 	if(this.moveLeft == true)
 	{
-<<<<<<< HEAD:Assessment 3/boss1.js
 		this.rotation = 4.65;
 		ddx = ddx - this.speed;   // enemy wants to go left
-=======
-		this.rotation = 4.5
-		ddx = ddx - speed;   // enemy wants to go left
->>>>>>> origin/master:Assessment 3/boss.js
 	}
 	
 //walking animation
@@ -351,11 +312,7 @@ Boss1.prototype.updateAgro = function(deltaTime)
 {
 	this.sprite.update(deltaTime);
 	
-<<<<<<< HEAD:Assessment 3/boss1.js
 this.targetPlayer (this.position.x, this.position.y, player.position.x, player.position.y);	
-=======
-//this.targetPlayer (this.position.x, this.position.y, player.position.x, player.position.y);	
->>>>>>> origin/master:Assessment 3/boss.js
 	
 //speeds acceleration		
 	var ddx = 0;

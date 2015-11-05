@@ -306,11 +306,7 @@ Enemy.prototype.updateAgro = function(deltaTime)
 {
 	this.sprite.update(deltaTime);
 	
-<<<<<<< HEAD
 	this.targetPlayer (this.position.x, this.position.y, player.position.x, player.position.y);	
-=======
-this.targetPlayer (this.position.x, this.position.y, player.position.x, player.position.y);	
->>>>>>> origin/master
 
 //speeds acceleration		
 	var speed = 100;
@@ -346,21 +342,12 @@ this.targetPlayer (this.position.x, this.position.y, player.position.x, player.p
 	
 	if (this.shootcd <= 0)
 	{
-<<<<<<< HEAD
 		this.shoot(this.position.x, this.position.y, this.rotation);
 		this.shootcd = 1.5;
 	}	
 	
 //walking animation
 	if (this.velocity.x > 50 || this.velocity.y > 50 || this.velocity.x < -50 || this.velocity.y < -50)
-=======
-		this.shoot(this.position.x, this.position.y, this.velocity.x, this.velocity.y);
-		this.shootcd = 1;
-	}	
-	
-//walking animation
-	if (this.velocity.x > 3 || this.velocity.y > 3 || this.velocity.x < -3 || this.velocity.y < -3)
->>>>>>> origin/master
 	{
 		if (this.sprite.currentAnimation != ANIM_WALKING)
 		{
