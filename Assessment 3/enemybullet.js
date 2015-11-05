@@ -1,5 +1,5 @@
 var ebullets = [];
-var Ebullet = function(EbulX, EbulY, EbulVX, EbulVY) 
+var Ebullet = function(EbulX, EbulY, Ebulr) 
 {
 	this.sprite = new Sprite("ebullet.png");
 	this.sprite.buildAnimation(1, 1, 10, 15, -1, [0]);
@@ -9,9 +9,21 @@ var Ebullet = function(EbulX, EbulY, EbulVX, EbulVY)
 	this.position = new Vector2();
 	this.position.set(EbulX, EbulY);
 	this.velocity = new Vector2();
-	this.velocity.set(EbulVX * 1.75, EbulVY *1.75);
 	
+	this.speed = 325;
+	this.rotation = Ebulr;
 	this.timer = 3.5;
+	
+	var velX = 0;
+	var velY = -1;
+	
+// now rotate this vector acording to the shooters current rotation
+	var s = Math.sin(Ebulr);
+	var c = Math.cos(Ebulr);
+	var xVel = (velX * c) - (velY * s);
+	var yVel = (velX * s) + (velY * c);
+	this.velocity.x = xVel * this.speed;
+	this.velocity.y = yVel * this.speed; 
 }
 
 var hit = false;
@@ -24,6 +36,11 @@ Ebullet.prototype.update = function(deltaTime)
 {
 	this.sprite.update(deltaTime);
 	
+	if (this.timer >=0)
+	{
+		this.timer -= deltaTime;
+	}
+	
 	this.position.x = this.position.x  +  this.velocity.x * deltaTime;
 	this.position.y = this.position.y  +  this.velocity.y * deltaTime;
 }
@@ -33,6 +50,6 @@ Ebullet.prototype.draw = function()
 	context.save();
 	context.translate(this.position.x- worldOffsetX, this.position.y - worldOffsetY);
 	context.rotate(this.rotation);
-	this.sprite.draw(context, 0,0);		
+	this.sprite.draw(context, -12,-100);		
 	context.restore(); 
 }

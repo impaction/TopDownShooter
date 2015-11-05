@@ -7,15 +7,16 @@ var Player = function()
 {  
 	this.sprite = new Sprite("soldier.png");
  
-	this.sprite.buildAnimation(3, 1, 99, 151, 0.2,  //walking
+	this.sprite.buildAnimation(3, 3, 151, 151, 0.2,  //walking
 	[0, 1, 2, 1]);
-	this.sprite.buildAnimation(3, 1, 99, 151, 0.2,  // idle
+	this.sprite.buildAnimation(3, 3, 151, 151, 0.2,  // idle
 	[1]);
 
 	for(var i=0; i<ANIM_MAX; i++)					
 	{
-		this.sprite.setAnimationOffset(i, -50, -75);								
+		this.sprite.setAnimationOffset(i, -75, -75);								
 	}
+	
 	this.sprite.setAnimation(ANIM_IDLE);
 	
 	this.position = new Vector2();  
@@ -23,8 +24,8 @@ var Player = function()
 	
 	this.velocity = new Vector2();
     
-	this.width = 159;  
-	this.height = 163; 
+	this.width = 151;  
+	this.height = 151; 
     
 	this.directionX = 0;
 	this.directionY = 0;
@@ -105,7 +106,6 @@ Player.prototype.update = function(deltaTime)
 	{
 		this.angularDirection =- 1;		
 	}
-
 //rotate right
 	else if(keyboard.isKeyDown(keyboard.KEY_D) == true) 
 	{
@@ -117,15 +117,13 @@ Player.prototype.update = function(deltaTime)
 	{         
 		this.directionY =- 1;
 	}
-	
 //move backward
 	else if(keyboard.isKeyDown(keyboard.KEY_S) == true)  
 	{         
 		this.directionY =+ 1;
 	}
-
 // scarf  left   
-	if(keyboard.isKeyDown(keyboard.KEY_Q) == true) 
+	else if(keyboard.isKeyDown(keyboard.KEY_Q) == true) 
 	{
 		this.directionX =-1;
 	}
@@ -133,8 +131,8 @@ Player.prototype.update = function(deltaTime)
 	else if(keyboard.isKeyDown(keyboard.KEY_E) == true) 
 	{
 		this.directionX =+ 1;
-	}	
-
+	}
+	
 //walking
 	if (this.velocity.x > 1 || this.velocity.y > 1 || this.velocity.x < -1 || this.velocity.y < -1)
 	{
@@ -259,7 +257,6 @@ Player.prototype.update = function(deltaTime)
 		} 
 	}
 }
-
 
 Player.prototype.draw = function() 
 { 

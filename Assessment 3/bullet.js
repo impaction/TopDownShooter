@@ -12,18 +12,18 @@ var Bullet = function()
 	
 	this.speed = 400;
 	this.rotation = player.rotation;
-	
 	this.timer = 3;
 	
 	var velX = 0;
 	var velY = -1;
+	
 // now rotate this vector acording to the players current rotation
 	var s = Math.sin(player.rotation);
 	var c = Math.cos(player.rotation);
 	var xVel = (velX * c) - (velY * s);
 	var yVel = (velX * s) + (velY * c);
 	this.velocity.x = xVel * this.speed;
-	this.velocity.y = yVel * this.speed;
+	this.velocity.y = yVel * this.speed; 
 }
 
 var hit = false;
@@ -40,8 +40,7 @@ Bullet.prototype.update = function(deltaTime)
 	{
 		this.timer -= deltaTime;
 	}
-		
-		
+
 	this.position.x = this.position.x  +  this.velocity.x * deltaTime;
 	this.position.y = this.position.y  +  this.velocity.y * deltaTime;
 }
@@ -51,6 +50,6 @@ Bullet.prototype.draw = function()
 	context.save();
 	context.translate(this.position.x- worldOffsetX, this.position.y - worldOffsetY);
 	context.rotate(this.rotation);
-	this.sprite.draw(context, 0,0);		
+	this.sprite.draw(context, 12,-100);		
 	context.restore(); 
 }

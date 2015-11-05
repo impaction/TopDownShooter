@@ -43,7 +43,7 @@ function runTitle(deltaTime)
 function runGame(deltaTime)
 {
 	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
-	checkNextLv();
+	
 //update player 	
 	player.update(deltaTime);
 //draw map level
@@ -104,6 +104,47 @@ function runGame(deltaTime)
 		}
 	}	
 
+//update draw enemy2 bullets
+	for(var i=0; i<ebullets2.length; i++)
+	{
+		ebullets2[i].update(deltaTime);
+		ebullets2[i].draw(deltaTime);
+				
+//splice var			
+		var eb2hit= false;
+//timer		
+		if (ebullets2[i].timer >= 0)
+		{
+			ebullets2[i].timer -= deltaTime;
+		}
+		
+		if (ebullets2[i].timer <= 0)
+		{
+			var eb2hit = true;
+		}
+//player collision		
+		if(intersects(ebullets2[i].position.x, ebullets2[i].position.y, TILE, TILE,
+			player.position.x, player.position.y, TILE, TILE) == true)
+			{
+// kill the bullet
+				player.health -= 5;
+				ebullets2.splice(i, 1);
+				break;
+			}		
+//kill ouside of screen		
+		if (ebullets2[i].position.x <= -1 || ebullets2[i].position.y <= -1 || 
+		ebullets2[i].position.x > 3200 || ebullets2[i].position.y > 3200)
+		{
+			eb2hit = true;
+		}
+//splice		
+		if (eb2hit == true) 
+		{
+			ebullets2.splice(i, 1);
+			break;
+		}
+	}
+	
 //update draw bullets
 	for(var i=0; i<bullets.length; i++)
 	{
@@ -241,6 +282,7 @@ function runGame(deltaTime)
 	}
 
 	drawClouds(levelN);
+	checkNextLv();
 //hud	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
@@ -283,6 +325,8 @@ function runLvComp(deltaTime)
 	bullets.splice( i, bullets.length);
 	grenades.splice( i, grenades.length);
 	player.rotation = 0;
+	player.shootCooldownTimer = 0;
+	player.throwCoolDownTimer = 0;
 	player.health = 100;
 	
 	bosses.splice( i, bosses.length);
@@ -341,14 +385,33 @@ function checkNextLv()
 //spawnbosscheck
 function spawnBoss()
 {
-	var hasBossSpawned = false;
+	var hasBossSpawned1 = false;
+	if (levelN.level == 1)
+	{
+		if (hasBossSpawned1 == false)		
+		{
+			boss1.spawn(1600, 1600);
+			hasBossSpawned1 = true;
+		}
+	}
 	
+	var hasBossSpawned2 = false;
+	if (levelN.level == 2)
+	{
+		if (hasBossSpawned2 == false)		
+		{
+			boss1.spawn(1500, 450);
+			hasBossSpawned2 = true;
+		}
+	}
+	
+	var hasBossSpawned3 = false;
 	if (levelN.level == 3)
 	{
-		if (hasBossSpawned == false)		
+		if (hasBossSpawned3 == false)		
 		{
-			boss.spawn();
-			hasBossSpawned = true;
+			boss2.spawn(1200, 1500);
+			hasBossSpawned3 = true;
 		}
 	}
 }
