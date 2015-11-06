@@ -4,7 +4,7 @@ var STATE_LEVELCOMPLETE = 2;
 var STATE_GAMECOMPLETE = 3;
 var STATE_GAMEOVER = 4;
 
-var gameOverTimer = 5;
+var Statecd = 0;
 
 var levelN = level1;
 
@@ -14,9 +14,20 @@ var gameState = STATE_TITLE; //STATE_TITLE or STATE_GAME or STATE_GAMEOVER
 //title screen text
 function titleText()
 {
-	context.fillStyle = "black";  
-	context.font="30px Arial";  
-	context.fillText("Start Game ENTER!",240, 100);
+	context.fillStyle = "yellow";  
+	context.font="40px Arial";  
+	context.fillText("One Man Army !",450, 125);
+	
+	context.fillStyle = "white";  
+	context.font="30px Arial"; 
+	context.fillText("Press ENTER!",500, 350);
+	
+	context.font="20px Arial";
+	context.fillText("<WASD = Movement>",25, 700);
+	context.fillText("<QE = Strafe>",375, 700);
+	context.fillText("<Numpad 1 = Shoot>", 725, 700);
+	context.fillText("<Numpad 2 = Grenade>", 1075, 700);
+	
 }
 //title screen function
 function runTitle(deltaTime)
@@ -28,14 +39,20 @@ function runTitle(deltaTime)
 	
 	titleText();							// draw text
 	
+	if (Statecd > 0)
+	{
+		Statecd -= deltaTime;
+	}
 //enter game
 	if(keyboard.isKeyDown(keyboard.KEY_ENTER) == true) 
-	{   
-		
-		player.position.set( 2*TILE,2*TILE); //set player pos for lv1
-		player.score = 0;		//reset player score
-		gameState = STATE_GAME;
-		return;     
+	{
+		if (Statecd <= 0)
+		{
+			player.position.set( 2*TILE,2*TILE); //set player pos for lv1
+			player.score = 0;		//reset player score
+			gameState = STATE_GAME;
+			return;
+		}
 	}      
 }
 
@@ -351,11 +368,14 @@ function runGame(deltaTime)
 //level complete text
 function lvCompText(deltaTime)
 {
-	context.fillStyle = "black";  
+	context.fillStyle = "white";  
 	context.font="30px Arial";  
-	context.fillText("level Complete!  ", 240, 100);
-	context.fillText("Score  " + player.score ,240, 150);
-	context.fillText("Press ENTER !",240, 200);
+	context.fillText("CONGRATULATIONS !", 470, 125);
+	context.fillText("Level Complete", 500, 200);
+	context.fillText("Score  " + player.score ,530, 275);
+	
+	context.font="20px Arial";
+	context.fillText("<Press ENTER>",550, 700);
 }
 //level complete splash
 function runLvComp(deltaTime)
@@ -459,12 +479,14 @@ function spawnBoss()
 // game complete text
 function gameCompleteText(deltaTime)
 {
-	context.fillStyle = "black";  
+	context.fillStyle = "white";  
 	context.font="30px Arial";  
-	context.fillText("Game Complete !", 240, 100);
-	context.fillText("Score  " + player.score ,240, 150);
-	context.fillText("Press 3 to Return to Title  ", 240, 200);
+	context.fillText("CONGRATULATIONS !", 470, 150);
+	context.fillText("Game Complete", 510, 210);
+	context.fillText("Score  " + player.score ,550, 275);
 	
+	context.font="20px Arial";
+	context.fillText("<Press ENTER>",550, 700);
 }
 // game complete
 function runGameComplete(deltaTime)
@@ -478,20 +500,27 @@ function runGameComplete(deltaTime)
 	
 	levelN = level1;		//reset level progress
 	
-	if(keyboard.isKeyDown(keyboard.KEY_3) == true) 
+	if(keyboard.isKeyDown(keyboard.KEY_ENTER) == true) 
 	{
-		gameState = STATE_TITLE;
-		return;
+		if (Statecd <= 0)
+		{
+			Statecd = 2;
+			gameState = STATE_TITLE;
+			return;
+		}
 	}
 }
 
 // game over text
 function gameOverText(deltaTime)
 {
-	context.fillStyle = "black";  
+	context.fillStyle = "white";  
 	context.font="30px Arial";  
-	context.fillText("Game Over!  "+ gameOverTimer, 240, 100);
-	context.fillText("Score  " + player.score ,240, 150);
+	context.fillText("Game Over !", 530, 100);
+	context.fillText("Score   " + player.score ,550, 200);
+	
+	context.font="20px Arial"; 
+	context.fillText("<Press ENTER>",525, 700);
 }
 // game over splash
 function runGameOver(deltaTime)
@@ -518,11 +547,14 @@ function runGameOver(deltaTime)
 	player.position.set( 2*TILE,2*TILE); //set player pos for lv1
 	initialize(levelN);
 	
-//return to title after timer
-	gameOverTimer -= deltaTime;	
-	if(gameOverTimer <= 0)
+//return to title after enter
+	if(keyboard.isKeyDown(keyboard.KEY_ENTER) == true) 
 	{
-		gameState = STATE_TITLE;
-		gameOverTimer = 5;
+		if (Statecd <= 0)
+		{
+			Statecd = 2;
+			gameState = STATE_TITLE;
+			return;
+		}
 	}
 }
