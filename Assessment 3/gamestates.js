@@ -33,6 +33,7 @@ function titleText()
 function runTitle(deltaTime)
 {
 	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
+	
 	var background = new Image();	
 	background.src = "titlesplash.jpg";		
 	context.drawImage(background, 0, 0);	// draw bg
@@ -51,6 +52,8 @@ function runTitle(deltaTime)
 			player.position.set( 2*TILE,2*TILE); //set player pos for lv1
 			player.score = 0;		//reset player score
 			gameState = STATE_GAME;
+			musicBackgroundTitle.stop();
+			musicBackgroundL1.play();
 			return;
 		}
 	}      
@@ -60,7 +63,7 @@ function runTitle(deltaTime)
 function runGame(deltaTime)
 {
 	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
-	
+
 //update player 	
 	player.update(deltaTime);
 //draw map level
@@ -269,6 +272,7 @@ function runGame(deltaTime)
 		if (ghit == true) 
 		{
 			explosion.explode(grenades[i].position.x , grenades[i].position.y);
+			sfxExplode.play();
 			grenades.splice(i, 1);
 			break;
 		}
@@ -283,7 +287,7 @@ function runGame(deltaTime)
 		{	
 			for(var j=0; j<enemies.length; j++)
 			{
-				if(intersects(explosions[i].position.x -32, explosions[i].position.y -32 , explosions[i].position.x +32, explosions[i].position.y +32, //TILE, TILE,
+				if(intersects(explosions[i].position.x, explosions[i].position.y, explosions[i].position.x +32, explosions[i].position.y +32, //TILE, TILE,
 				enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
 				{
 // check last enemy for boss spawn
@@ -357,14 +361,17 @@ function runGame(deltaTime)
 	}
 	
 	if(keyboard.isKeyDown(keyboard.KEY_4) == true) 
-	{    
+	{
+		musicBackgroundL1.stop();
+		musicBackgroundL2.stop();
+		musicBackgroundL3.stop();
+		musicBackgroundGO.play();
 		gameState = STATE_GAMEOVER;
 		return;     
 	} 
 
 }
 //----------------------------------------------------
-
 //level complete text
 function lvCompText(deltaTime)
 {
@@ -398,6 +405,8 @@ function runLvComp(deltaTime)
 		levelN = level1;
 		player.position.set( 2*TILE,2*TILE); //set player pos for lv1
 		initialize(levelN)
+		musicBackgroundL3.stop();
+		musicBackgroundGC.play();
 		gameState = STATE_GAMECOMPLETE;
 		return
 	}
@@ -414,6 +423,8 @@ function runLvComp(deltaTime)
 		if (levelN == level1)		// go to lv 2
 		{
 			levelN = level2;
+			musicBackgroundL1.stop();
+			musicBackgroundL2.play();
 			player.position.set( 45*TILE,45*TILE); //set player start pos
 			initialize(levelN); 
 		
@@ -424,6 +435,8 @@ function runLvComp(deltaTime)
 		if (levelN == level2)		//go to lv 3
 		{
 			levelN = level3;
+			musicBackgroundL2.stop();
+			musicBackgroundL3.play();
 			player.position.set( 5*TILE,45*TILE); //player start pos
 			initialize(levelN); 
 		
@@ -505,6 +518,8 @@ function runGameComplete(deltaTime)
 		if (Statecd <= 0)
 		{
 			Statecd = 2;
+			musicBackgroundGC.stop();
+			musicBackgroundTitle.play();
 			gameState = STATE_TITLE;
 			return;
 		}
@@ -516,7 +531,7 @@ function gameOverText(deltaTime)
 {
 	context.fillStyle = "white";  
 	context.font="30px Arial";  
-	context.fillText("Game Over !", 530, 100);
+	context.fillText("Game Over !", 540, 100);
 	context.fillText("Score   " + player.score ,550, 200);
 	
 	context.font="20px Arial"; 
@@ -553,6 +568,8 @@ function runGameOver(deltaTime)
 		if (Statecd <= 0)
 		{
 			Statecd = 2;
+			musicBackgroundGO.stop();
+			musicBackgroundTitle.play();
 			gameState = STATE_TITLE;
 			return;
 		}

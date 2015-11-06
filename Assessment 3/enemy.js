@@ -40,6 +40,7 @@ Enemy.prototype.shoot = function(EbulX, EbulY, Ebulr)
 {
 	var ebullet = new Ebullet(EbulX, EbulY, Ebulr); 
 	ebullets.push(ebullet);
+	sfxEGunFire.play();
 }
 
 Enemy.prototype.randomDirection = function()

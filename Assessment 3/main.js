@@ -28,6 +28,16 @@ function getDeltaTime()
 }
 //-------------------- Don't modify anything above here
 
+//sounds
+var musicBackgroundTitle;
+var musicBackgroundL1;
+var musicBackgroundL2;
+var musicBackgroundL3;
+var musicBackgroundGC;
+var musicBackgroundGO;
+var sfxGunFire;
+var sfxExplode;
+
 //screen
 var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
@@ -357,6 +367,92 @@ function run()
 }
 
 initialize(levelN);
+
+//music sounds
+{
+	musicBackgroundTitle = new Howl
+	({
+			urls: ["gametitle.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundL1 = new Howl
+	({
+			urls: ["level1.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+
+	musicBackgroundL2 = new Howl
+	({
+			urls: ["level2.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundL3 = new Howl
+	({
+			urls: ["level3.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundGC = new Howl
+	({
+			urls: ["gamecomplete.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundGO = new Howl
+	({
+			urls: ["gameover.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundTitle.play();
+
+	sfxGunFire = new Howl
+	({
+		urls: ["gunfire.ogg"],
+		buffer: true,
+		volume: 0.3,
+		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
+	
+	sfxEGunFire = new Howl
+	({
+		urls: ["gunfire.ogg"],
+		buffer: true,
+		volume: 0.2,
+		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
+	
+		sfxExplode = new Howl
+	({
+		urls: ["explosion.ogg"],
+		buffer: true,
+		volume: 1,
+		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
+}
 
 //-------------------- Don't modify anything below here
 // This code will set up the framework so that the 'run' function is called 60 times per second.

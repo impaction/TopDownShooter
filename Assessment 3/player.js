@@ -61,6 +61,10 @@ Player.prototype.update = function(deltaTime)
 {
 	if (this.health <= 0)
 	{
+		musicBackgroundL1.stop();
+		musicBackgroundL2.stop();
+		musicBackgroundL3.stop();
+		musicBackgroundGO.play();
 		gameState = STATE_GAMEOVER;
 	}
 	
@@ -87,7 +91,7 @@ Player.prototype.update = function(deltaTime)
 //shoot bullet ,animation 
 	if(keyboard.isKeyDown(keyboard.KEY_NUMPAD_1) == true && this.shootCooldownTimer <= 0) 
 	{
-		//sfxFire.play();
+		sfxGunFire.play();
 		this.shooting = true;
 		this.shootCooldownTimer += .4;
 		this.shoot();

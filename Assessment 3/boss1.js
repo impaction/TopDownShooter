@@ -42,6 +42,7 @@ Boss1.prototype.spawn = function(b1x, b1y)
 {
 	var boss1 = new Boss1(b1x, b1y); 
 	bosses.push(boss1);
+	sfxEGunFire.play();
 }
 
 Boss1.prototype.shoot = function(EbulX, EbulY, Ebulr)
