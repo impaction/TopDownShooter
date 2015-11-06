@@ -315,22 +315,22 @@ Enemy.prototype.updateAgro = function(deltaTime)
 	
 // go toward player	
 //up
-	if (this.position.y > player.position.y + 192)
+	if (this.position.y > player.position.y + 64)
 	{
 		ddy = -speed;
 	}
 //down	
-	if (this.position.y < player.position.y - 192)
+	if (this.position.y < player.position.y - 64)
 	{
 		ddy = speed;
 	}
 //left
-	if (this.position.x > player.position.x + 192)
+	if (this.position.x > player.position.x + 64)
 	{
 		ddx = -speed;
 	}
 //right	
-	if (this.position.x < player.position.x - 192)
+	if (this.position.x < player.position.x - 64)
 	{
 		ddx = speed;
 	}

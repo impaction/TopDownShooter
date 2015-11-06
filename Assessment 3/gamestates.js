@@ -283,11 +283,54 @@ function runGame(deltaTime)
 
 	drawClouds(levelN);
 	checkNextLv();
-//hud	
-	context.fillStyle = "black";  
-	context.font="30px Arial";  
+	
+//hud text
+	context.fillStyle = "white";  
+	context.font="20px Arial";  
 	context.fillText("Playing Game num1 shoot num2 grenade",240, 100);
 	context.fillText("3 level skip 4 instant death",240, 150)
+
+//hud pix
+	var hudhealth = document.createElement("img");
+	hudhealth.src = "hudhealth.png";
+	context.drawImage(hudhealth, 5, 5);	 // 5, 665);
+	context.fillText(player.health, 60, 50);
+	
+	var hudgrenade = document.createElement("img");
+	hudgrenade.src = "hudgrenade.png";
+	context.drawImage(hudgrenade, 5, 665); // 1225, 665);
+	var playergcd = Math.round(player.throwCoolDownTimer);
+	context.fillText(playergcd, 60, 715);
+	
+	var hudscore = document.createElement("img");
+	hudscore.src = "hudscore.png";
+	context.drawImage(hudscore, 1225, 665); // 5, 5);
+	
+	var hudenemys = document.createElement("img");
+	hudenemys.src = "hudenemy.png";
+
+	var hudboss = document.createElement("img");
+	hudboss.src = "hudboss.png";
+	
+// enemies/ boss health	pix
+	if (enemies.length >0)
+	{
+		context.drawImage(hudenemys, 1225, 5);
+	}
+	else
+	{
+		context.drawImage(hudboss, 1225, 5);
+	}
+//text	
+	if (enemies.length >0)
+	{
+		context.fillText(enemies.length, 1175, 50);
+	}
+	
+	if (bosses.length > 0)
+	{
+		context.fillText(bosses[0].health, 1175, 50);
+	}
 	
 	if(keyboard.isKeyDown(keyboard.KEY_3) == true) 
 	{
