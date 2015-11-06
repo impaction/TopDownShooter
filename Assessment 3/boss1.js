@@ -474,6 +474,7 @@ Boss1.prototype.update = function(deltaTime)
 	if (this.health <=0)
 	{
 		bosses.splice(i, 1);
+		player.score += 15;
 	}
 	
 	this.distanceToPlayer(this.position.x, this.position.y, player.position.x, player.position.y);

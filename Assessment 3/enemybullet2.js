@@ -10,7 +10,7 @@ var Ebullet2 = function(Ebul2X, Ebul2Y, Ebul2r)
 	this.position.set(Ebul2X, Ebul2Y);
 	this.velocity = new Vector2();
 
-	this.speed = 375;
+	this.speed = 400;
 	this.rotation = Ebul2r;
 	this.timer = 8;
 	

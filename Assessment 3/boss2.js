@@ -31,7 +31,7 @@ var Boss2 = function(b2x, b2y)
 	
 //default stats
 	this.health = 500;
-	this.shootcd = .75;
+	this.shootcd = 1;
 }
 
 Boss2.prototype.spawn = function(b2x, b2y)
@@ -331,7 +331,7 @@ this.targetPlayer (this.position.x, this.position.y, player.position.x, player.p
 	if (this.shootcd <= 0)
 	{
 		this.shoot(this.position.x, this.position.y, this.rotation);
-		this.shootcd = .75;
+		this.shootcd = .5;
 	}	
 
 //update position and velocity		
@@ -444,6 +444,7 @@ Boss2.prototype.update = function(deltaTime)
 	if (this.health <=0)
 	{
 		bosses.splice(i, 1);
+		player.score += 25;
 	}
 	
 	this.distanceToPlayer(this.position.x, this.position.y, player.position.x, player.position.y);

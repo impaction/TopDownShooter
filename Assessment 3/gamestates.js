@@ -14,8 +14,6 @@ var gameState = STATE_TITLE; //STATE_TITLE or STATE_GAME or STATE_GAMEOVER
 //title screen text
 function titleText()
 {
-	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
-	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
 	context.fillText("Start Game ENTER!",240, 100);
@@ -23,8 +21,9 @@ function titleText()
 //title screen function
 function runTitle(deltaTime)
 {
+	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
 	var background = new Image();	
-	//background.src = "titleSplash.jpg";		
+	background.src = "titlesplash.jpg";		
 	context.drawImage(background, 0, 0);	// draw bg
 	
 	titleText();							// draw text
@@ -34,6 +33,7 @@ function runTitle(deltaTime)
 	{   
 		
 		player.position.set( 2*TILE,2*TILE); //set player pos for lv1
+		player.score = 0;		//reset player score
 		gameState = STATE_GAME;
 		return;     
 	}      
@@ -187,6 +187,7 @@ function runGame(deltaTime)
 				}
 // kill both the bullet and the enemy
 				enemies.splice(j, 1);
+				player.score += 5;
 				bhit = true;
 				break;
 			}
@@ -265,7 +266,7 @@ function runGame(deltaTime)
 		{	
 			for(var j=0; j<enemies.length; j++)
 			{
-				if(intersects(explosions[i].position.x, explosions[i].position.y , TILE, TILE,
+				if(intersects(explosions[i].position.x -32, explosions[i].position.y -32 , explosions[i].position.x +32, explosions[i].position.y +32, //TILE, TILE,
 				enemies[j].position.x, enemies[j].position.y, TILE, TILE) == true)
 				{
 // check last enemy for boss spawn
@@ -275,6 +276,7 @@ function runGame(deltaTime)
 					}
 // kill the enemy
 					enemies.splice(j, 1);
+					player.score += 5;
 					break;
 				}
 			}
@@ -287,8 +289,6 @@ function runGame(deltaTime)
 //hud text
 	context.fillStyle = "white";  
 	context.font="20px Arial";  
-	context.fillText("Playing Game num1 shoot num2 grenade",240, 100);
-	context.fillText("3 level skip 4 instant death",240, 150)
 
 //hud pix
 	var hudhealth = document.createElement("img");
@@ -305,6 +305,7 @@ function runGame(deltaTime)
 	var hudscore = document.createElement("img");
 	hudscore.src = "hudscore.png";
 	context.drawImage(hudscore, 1225, 665); // 5, 5);
+	context.fillText(player.score, 1190, 715);
 	
 	var hudenemys = document.createElement("img");
 	hudenemys.src = "hudenemy.png";
@@ -324,12 +325,12 @@ function runGame(deltaTime)
 //text	
 	if (enemies.length >0)
 	{
-		context.fillText(enemies.length, 1175, 50);
+		context.fillText(enemies.length, 1190, 50);
 	}
 	
 	if (bosses.length > 0)
 	{
-		context.fillText(bosses[0].health, 1175, 50);
+		context.fillText(bosses[0].health, 1190, 50);
 	}
 	
 	if(keyboard.isKeyDown(keyboard.KEY_3) == true) 
@@ -344,27 +345,23 @@ function runGame(deltaTime)
 		return;     
 	} 
 
-	// draw the FPS  
-	context.fillStyle = "#f00";  
-	context.font="14px Arial";  
-	context.fillText("FPS: " + fps, 5, 20, 100);
-	
 }
 //----------------------------------------------------
 
 //level complete text
 function lvCompText(deltaTime)
 {
-	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
-	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
 	context.fillText("level Complete!  ", 240, 100);
+	context.fillText("Score  " + player.score ,240, 150);
 	context.fillText("Press ENTER !",240, 200);
 }
 //level complete splash
 function runLvComp(deltaTime)
 {
+	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
+	
 	bullets.splice( i, bullets.length);
 	grenades.splice( i, grenades.length);
 	player.rotation = 0;
@@ -386,7 +383,7 @@ function runLvComp(deltaTime)
 	}
 	
 	var background = new Image();			
-	//background.src = "gameOverSplash.jpg";		//draw bg
+	background.src = "levelcompletesplash.jpg";		//draw bg
 	context.drawImage(background, 0, 0);
 	
 	lvCompText();
@@ -462,18 +459,19 @@ function spawnBoss()
 // game complete text
 function gameCompleteText(deltaTime)
 {
-	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
-	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
-	context.fillText("Game Complete! ", 240, 100);
+	context.fillText("Game Complete !", 240, 100);
+	context.fillText("Score  " + player.score ,240, 150);
 	context.fillText("Press 3 to Return to Title  ", 240, 200);
+	
 }
 // game complete
 function runGameComplete(deltaTime)
 {
+	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
 	var background = new Image();			
-	//background.src = "gameOverSplash.jpg";		//draw bg
+	background.src = "gamecompletesplash.jpg";		//draw bg
 	context.drawImage(background, 0, 0);
 	
 	gameCompleteText();
@@ -490,17 +488,17 @@ function runGameComplete(deltaTime)
 // game over text
 function gameOverText(deltaTime)
 {
-	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
-	
 	context.fillStyle = "black";  
 	context.font="30px Arial";  
 	context.fillText("Game Over!  "+ gameOverTimer, 240, 100);
+	context.fillText("Score  " + player.score ,240, 150);
 }
 // game over splash
 function runGameOver(deltaTime)
 {
+	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
 	var background = new Image();			
-	//background.src = "gameOverSplash.jpg";		//draw bg
+	background.src = "gameoversplash.jpg";		//draw bg
 	context.drawImage(background, 0, 0);
 	
 	gameOverText();								//draw the text

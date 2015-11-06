@@ -12,6 +12,7 @@ var Explosion = function(posX, posY)
 	this.sprite.setAnimation(ANIM_EXPLODE);
 	this.timer = 1.35;
 	
+	
 	this.position = new Vector2();
 	this.position.set(posX, posY);
 	this.velocity = new Vector2();

@@ -42,6 +42,7 @@ var Player = function()
 	this.throwCoolDownTimer = 0;
 //health
 	this.health = 100;
+	this.score = 0;
 }; 
 	
 Player.prototype.shoot = function()
