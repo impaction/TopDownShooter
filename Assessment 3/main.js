@@ -27,6 +27,17 @@ function getDeltaTime()
 	return deltaTime;
 }
 //-------------------- Don't modify anything above here
+
+//sounds
+var musicBackgroundTitle;
+var musicBackgroundL1;
+var musicBackgroundL2;
+var musicBackgroundL3;
+var musicBackgroundGC;
+var musicBackgroundGO;
+var sfxGunFire;
+var sfxExplode;
+
 //screen
 var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
@@ -38,15 +49,17 @@ var fpsTime = 0;
 
 // load the image to use for the level tiles
 var tileset = document.createElement("img"); 
-tileset.src = "All Tiles .png"
+tileset.src = "level sprite sheet.png"
 
 //level layers 
 var LAYER_FLOOR = 0; 
 var LAYER_WALLS = 1;
 var LAYER_LAVA = 2;
-var LAYER_COUNT = 3;
+var LAYER_TREES = 3;
+var LAYER_BUSHES = 4;
+var LAYER_COUNT = 4;
+var LAYER_OBJECT_ENEMY= 5;
 
-var LAYER_OBJECT_ENEMY= 3;
 
 var MAP = { tw: 50, th: 50 }; 
 //Specifies how big your level is, in tiles. 
@@ -60,34 +73,47 @@ var TILESET_PADDING = 0;
 //How many pixels are between the image border and the tile images in the tilemap 
 var TILESET_SPACING = 0; 
 //how many pixels are between tile images in the tilemap 
-var TILESET_COUNT_X = 12; 
+var TILESET_COUNT_X = 24; 
 //How many columns of tile images are in the tileset 
-var TILESET_COUNT_Y = 6; 
+var TILESET_COUNT_Y = 20; 
 //How many rows of tile images are in the tileset
 
-//enemy
+//arrays
 var enemies = [];
+var bosses = [];
+var bullets = [];
+var ebullets = [];
+var ebullets2 = [];
+var grenades = [];
+var explosions = [];
 
 //new obj
 var keyboard = new Keyboard();
 var vector2 = new Vector2();
 var player = new Player();
 var enemy = new Enemy();
+var boss1 = new Boss1();
+var boss2 = new Boss2();
+var bullet = new Bullet();
+var ebullet = new Ebullet();
+var ebullet2 = new Ebullet2();
+var grenade = new Grenade();
+var explosion = new Explosion();
 
 var cells = [];
 
-function initialize(level) 
+function initialize(levelN) 
 {          
 	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++)  // initialize the collision map
 	{           
 		cells[layerIdx] = [];             
 		var idx = 0;             
-		for(var y = 0; y < level.layers[layerIdx].height; y++)
+		for(var y = 0; y < levelN.layers[layerIdx].height; y++)
 		{                     
 			cells[layerIdx][y] = [];             
-			for(var x = 0; x < level.layers[layerIdx].width; x++) 
+			for(var x = 0; x < levelN.layers[layerIdx].width; x++) 
 			{                 
-				if(level.layers[layerIdx].data[idx] != 0) 
+				if(levelN.layers[layerIdx].data[idx] != 0) 
 				{ 
 // for each tile we find in the layer data, we need to create 4 collisions because 
 //our collision squares are 35x35 but the tile in the level are 70x70                    
@@ -108,22 +134,21 @@ function initialize(level)
 	
 // add enemies from tile layer
 	idx = 0;
-	for(var y = 0; y < level.layers[LAYER_OBJECT_ENEMY].height; y++) 
+	for(var y = 0; y < levelN.layers[LAYER_OBJECT_ENEMY].height; y++) 
 	{        
-		for(var x = 0; x < level.layers[LAYER_OBJECT_ENEMY].width; x++) 
+		for(var x = 0; x < levelN.layers[LAYER_OBJECT_ENEMY].width; x++) 
 		{
-			if(level.layers[LAYER_OBJECT_ENEMY].data[idx] != 0) 
+			if(levelN.layers[LAYER_OBJECT_ENEMY].data[idx] != 0) 
 			{
 				var px = tileToPixel(x);
 				var py = tileToPixel(y);
-				var e = new Enemy(px, py);
-				enemies.push(e);
+				var enemy = new Enemy(px, py);
+				enemies.push(enemy);
 			}
 			idx++;
 		}
-	} 
+	} 	
 }
-
 
 function cellAtPixelCoord(layer, x,y)    
 {  
@@ -164,7 +189,7 @@ function bound(value, min, max)
 
 var worldOffsetX = 1;
 var worldOffsetY = 1;
-function drawMap(level) 
+function drawMap(levelN) 
 { 
 	var startX = -1;
 	var startY = -1;
@@ -206,19 +231,18 @@ function drawMap(level)
 	worldOffsetY = startY * TILE + offsetY; 
 	
 	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
-	{
-		for( var y = 0; y < level.layers[layerIdx].height;  y++ ) 
+	{		
+		for( var y = 0; y < levelN.layers[layerIdx].height;  y++ ) 
 		{
-			
-			var idx = y * level.layers[layerIdx].width + startX;
+			var idx = y * levelN.layers[layerIdx].width + startX;
 			
 			for( var x = startX; x < startX + maxTilesX;  x++ ) 
 			{
-				if( level.layers[layerIdx].data[idx] != 0 )
+				if( levelN.layers[layerIdx].data[idx] != 0 )
 				{
 // the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
 //so subtract one from the tilesetid to get the correct tile
-					var tileIndex = level.layers[layerIdx].data[idx] - 1;
+					var tileIndex = levelN.layers[layerIdx].data[idx] - 1;
 					var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * 
 						(TILESET_TILE + TILESET_SPACING);
 					var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) *
@@ -229,6 +253,74 @@ function drawMap(level)
 				idx++;
 			}
 		}
+	}
+}
+
+function drawClouds(levelN) 
+{ 
+	var startX = -1;
+	var startY = -1;
+	var maxTilesX = Math.floor(SCREEN_WIDTH / TILE) + 2;
+	var maxTilesY = Math.floor(SCREEN_HEIGHT / TILE) + 2;
+	var tileX = pixelToTile(player.position.x);
+	var tileY = pixelToTile(player.position.y);
+	var offsetX = TILE + Math.floor(player.position.x%TILE);
+	var offsetY = TILE + Math.floor(player.position.y%TILE);
+	
+	startX = tileX - Math.floor(maxTilesX / 2);
+	startY = tileY - Math.floor(maxTilesY / 2);
+	
+	if(startX <= -2) 
+	{
+		startX = 0;
+		offsetX = 0;
+	}
+	
+	if(startY <= -3) 
+	{
+		startY = -1;
+		offsetY = -1;
+	}
+	
+	if(startX > (MAP.tw - maxTilesX ))
+	{
+		startX = MAP.tw - maxTilesX + 1;
+		offsetX = TILE;
+	}
+	
+	if(startY > (MAP.th - maxTilesY - 1))
+	{
+		startY = MAP.th - maxTilesY;
+		offsetY = TILE;
+	}
+	
+	worldOffsetX = startX * TILE + offsetX;
+	worldOffsetY = startY * TILE + offsetY; 
+	
+	for( var layerIdx= 3; layerIdx == LAYER_TREES; layerIdx++ )
+	{
+		for( var y = 0; y < levelN.layers[layerIdx].height;  y++ ) 
+		{
+			var idx = y * levelN.layers[layerIdx].width + startX;
+		
+			for( var x = startX; x < startX + maxTilesX;  x++ ) 
+			{
+				if( levelN.layers[layerIdx].data[idx] != 0 )
+				{
+// the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile),
+//so subtract one from the tilesetid to get the correct tile
+				var tileIndex = levelN.layers[layerIdx].data[idx] - 1;
+				var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * 
+					(TILESET_TILE + TILESET_SPACING);
+				var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_X)) *
+					(TILESET_TILE + TILESET_SPACING);
+				context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, 
+				(x-startX)*TILE - offsetX, (y -1)*TILE - worldOffsetY, TILESET_TILE, TILESET_TILE);
+				}
+			idx++;
+			}
+		}
+		
 	}
 }
 
@@ -271,10 +363,100 @@ function run()
 		case STATE_GAMEOVER:
 		runGameOver(deltaTime);
 		break;
+		
+		case STATE_CREDITS:
+		runCredits(deltaTime);
+		break;
 	}
 }
 
-initialize(level);
+initialize(levelN);
+
+//music sounds
+{
+	musicBackgroundTitle = new Howl
+	({
+			urls: ["gametitle.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundL1 = new Howl
+	({
+			urls: ["level1.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+
+	musicBackgroundL2 = new Howl
+	({
+			urls: ["level2.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundL3 = new Howl
+	({
+			urls: ["level3.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundGC = new Howl
+	({
+			urls: ["gamecomplete.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundGO = new Howl
+	({
+			urls: ["gameover.ogg"], 
+			loop: true,
+			buffer: true,
+			volume: 0.7
+	});
+	
+	musicBackgroundTitle.play();
+
+	sfxGunFire = new Howl
+	({
+		urls: ["gunfire.ogg"],
+		buffer: true,
+		volume: 0.3,
+		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
+	
+	sfxEGunFire = new Howl
+	({
+		urls: ["gunfire.ogg"],
+		buffer: true,
+		volume: 0.2,
+		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
+	
+		sfxExplode = new Howl
+	({
+		urls: ["explosion.ogg"],
+		buffer: true,
+		volume: 1,
+		onend: function() 
+		{
+			isSfxPlaying = false;
+		}
+	});
+}
 
 //-------------------- Don't modify anything below here
 // This code will set up the framework so that the 'run' function is called 60 times per second.
