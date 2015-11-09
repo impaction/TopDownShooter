@@ -363,6 +363,10 @@ function run()
 		case STATE_GAMEOVER:
 		runGameOver(deltaTime);
 		break;
+		
+		case STATE_CREDITS:
+		runCredits(deltaTime);
+		break;
 	}
 }
 

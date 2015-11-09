@@ -3,6 +3,7 @@ var STATE_GAME = 1;
 var STATE_LEVELCOMPLETE = 2;
 var STATE_GAMECOMPLETE = 3;
 var STATE_GAMEOVER = 4;
+var STATE_CREDITS = 5;
 
 var Statecd = 0;
 
@@ -16,11 +17,12 @@ function titleText()
 {
 	context.fillStyle = "yellow";  
 	context.font="40px Arial";  
-	context.fillText("One Man Army !",450, 125);
+	context.fillText("One Man Army !",500, 125);
 	
 	context.fillStyle = "white";  
 	context.font="30px Arial"; 
-	context.fillText("Press ENTER!",500, 350);
+	context.fillText("Press ENTER to start",500, 350);
+	context.fillText("Press 1 for credits ",500, 400);
 	
 	context.font="20px Arial";
 	context.fillText("<WASD = Movement>",25, 700);
@@ -56,7 +58,17 @@ function runTitle(deltaTime)
 			musicBackgroundL1.play();
 			return;
 		}
-	}      
+	} 
+
+	if(keyboard.isKeyDown(keyboard.KEY_1) == true) 
+	{
+		if (Statecd <= 0)
+		{
+			Statecd = 2;
+			gameState = STATE_CREDITS;
+			return;
+		}
+	}      	
 }
 
 //-------------   rungame function ------------------
@@ -574,4 +586,52 @@ function runGameOver(deltaTime)
 			return;
 		}
 	}
+}
+
+function creditText()
+{
+	context.fillStyle = "yellow";  
+	context.font="40px Arial";  
+	context.fillText("Credits",500, 125);
+	
+	context.font="20px Arial";
+	context.fillStyle = "white";
+	context.fillText("Music      Blizzard Eneterainment",200, 250);
+	context.fillText("Sound EFX         SoundBible.com",200, 300);
+	context.fillText("Sprites         2dgameartguru.com",200, 350);
+	context.fillText("Tiles            opengameart.org",200, 400);
+	
+	context.fillText("Damian Castle       Level Design / Animations",550, 300);
+	context.fillText("Ryan Vinter       Game Programmer",550, 350);
+	context.fillStyle = "yellow"; 
+	context.fillText("^^ Special Thanx to Matt & the other staff & students at AIE ^^",325, 500);
+	
+	context.fillStyle = "white";
+	context.fillText("< Press 1 to return to title >", 450, 650);
+}
+
+function runCredits(deltaTime)
+{
+	context.clearRect(0, 0, canvas.width, canvas.height);	//clear previous screen
+	
+	var background = new Image();	
+	background.src = "titlesplash.jpg";
+	context.drawImage(background, 0, 0);	// draw bg
+	
+	creditText();
+	
+	if (Statecd > 0)
+	{
+		Statecd -= deltaTime;
+	}
+	
+	if(keyboard.isKeyDown(keyboard.KEY_1) == true) 
+	{
+		if (Statecd <= 0)
+		{
+			Statecd = 2;
+			gameState = STATE_TITLE;
+			return;
+		}
+	}      	
 }
